@@ -10,8 +10,8 @@ int main(int args, int* argv)
     int toFact=6;
     int eMePls=6;
     int threeD=3;
-    double dfact, dexp;
-
+    double dfact, dexp, weeLn;
+/*
     printf("Give me a number to square:" );
     scanf("%d", &base);
 
@@ -25,7 +25,7 @@ int main(int args, int* argv)
     printf("\nSimple exponential: %d^%d is ", base, exponent);
     ans = simple_exp(&base, &exponent);
     printf("%d.\n", ans);
-
+*/
     ans=fact(&toFact); 
     printf("Factorial of 6: %d\n", ans);
 
@@ -35,8 +35,23 @@ int main(int args, int* argv)
     printf("Double Factorial of 6: %2.4f\n", dfact);
     printf("Exponential Double of 3^3: %4.4f\n", dexp);
 
-    double e_x=e(&eMePls);
-    printf("e^x of %d: %2.6f\n", eMePls, e_x);
+    dfact=e(&eMePls);
+    printf("e^x of %d: %2.6f\n", eMePls, dfact);
+    
+    // doesn't work I know
+    //dfact=logTaylor(&eMePls);
+    //printf("ln(x) of %d: %2.6f\n", eMePls, dfact);
+
+    weeLn=0.7;
+    dfact=logTaylor(&weeLn);
+    printf("ln(x) of %2.6f: %2.6f\n", weeLn, dfact);
+
+    weeLn=1.8;
+    dfact=logTaylor(&weeLn);
+    printf("ln(x) of %2.6f: %2.6f\n", weeLn, dfact);
+
+    dfact=euler();
+    printf("euler's number is %2.6f\n", dfact);
 
     fprintf(stderr, "Tests complete!\n");
     return 0;
