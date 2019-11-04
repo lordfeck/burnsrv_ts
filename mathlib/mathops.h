@@ -9,6 +9,7 @@ int simple_exp(int *base, int *exponent);
 double e(int *base);
 double euler();
 double logTaylor(double *base);
+double logNatural(double *base);
 int fact(int *x);
 double simple_expd(int *base, int *exponent);
 double simple_dexpd(double *base, int *exponent);

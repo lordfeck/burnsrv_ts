@@ -11,6 +11,7 @@ int main(int args, int* argv)
     int eMePls=6;
     int threeD=3;
     double dfact, dexp, weeLn;
+    double lnMePls=6.0;
 /*
     printf("Give me a number to square:" );
     scanf("%d", &base);
@@ -38,10 +39,6 @@ int main(int args, int* argv)
     dfact=e(&eMePls);
     printf("e^x of %d: %2.6f\n", eMePls, dfact);
     
-    // doesn't work I know
-    //dfact=logTaylor(&eMePls);
-    //printf("ln(x) of %d: %2.6f\n", eMePls, dfact);
-
     weeLn=0.7;
     dfact=logTaylor(&weeLn);
     printf("ln(x) of %2.6f: %2.6f\n", weeLn, dfact);
@@ -52,6 +49,18 @@ int main(int args, int* argv)
 
     dfact=euler();
     printf("euler's number is %2.6f\n", dfact);
+
+    dfact=logNatural(&lnMePls);
+    printf("ln(x) of %f: %2.6f\n", lnMePls, dfact);
+
+    lnMePls=0.2;
+    dfact=logNatural(&lnMePls);
+    puts("Test low number, then under range number:");
+    printf("ln(x) of %f: %2.6f\n", lnMePls, dfact);
+
+    lnMePls=-0.4;
+    dfact=logNatural(&lnMePls);
+    printf("ln(x) of %f: %2.6f\n", lnMePls, dfact);
 
     fprintf(stderr, "Tests complete!\n");
     return 0;

@@ -1,4 +1,5 @@
 /*cmath for simpletons*/
+/*my inspiration: https://en.wikipedia.org/wiki/Logarithm */
 #include"mathops.h"
 //ifdef debug include stdio (or use a debug macro header)
 //#include<stdio.h>
@@ -48,7 +49,7 @@ double euler(){
 // returns e^x to a degree of accuracy using a Taylor series
 double e(int *base){
     double result=1.0;
-    for (int i=1; i<MAX_RANGE; i++){
+    for (int i=1; i<=MAX_RANGE; i++){
         result += (simple_expd(base, &i) / factd(&i));
     }
     return result;
@@ -58,16 +59,26 @@ double e(int *base){
 // taylor's series, only works for 0 < x < 2
 double logTaylor(double *base){
     if (*base<0 || *base>=2.0) return 0.0;
-
     double result=0.0;
     double numerator=*base-1;
     for (int i=1; i<=MAX_RANGE; i++){
         if (i%2==0) result -= (simple_dexpd(&numerator, &i) / i*1.0);
         else result += (simple_dexpd(&numerator, &i) / i*1.0);
-
-//        fprintf(stderr, "%d: Value of base %d numerator %d result %f\n", i, *base, numerator, result);
-
     }
+    return result;
+}
+
+// ln(x) for any value where x>0
+double logNatural(double *base){
+    if (*base <=0) return 0.0;
+    double result=0.0, expBase=0.0;
+    int exp=0;
+    for(int i=0; i<=MAX_RANGE; i++){
+        exp=(2*i)+1;
+        expBase=(*base-1)/(*base+1);
+        result += ((1.0/(double)exp))*(simple_dexpd(&expBase, &exp));
+    }
+    result=result*2.0;
     return result;
 }
 
