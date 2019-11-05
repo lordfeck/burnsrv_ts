@@ -18,14 +18,19 @@
 #define WRITE_OUT 2
 #define GENERATE_ONLY 3
 
-int readInLogFile(char *fileName, float *logTable, int upperBound);
-int writeOutLogFile(char *fileName, float* logTable, int upperBound);
+int readInLogFile(const char *fileName, float *logTable, int upperBound);
+int writeOutLogFile(const char *fileName, const float* logTable, int upperBound);
 int generateLogsOnly(float *logTable, int upperBound);
 
 int main(int argc, char** argv){
     char *logo="   ________          __\n  / _/ _/ /____ ___ / /_\n / _/ _/ __/ -_|_-</ __/\n/_//_/ \\__/\\__/___/\\__/\n";
     char *banner=" FFTEST: Fun Function Tests. Flood your RAM for fun! \n=====================================================\n\
- Usage: ... Note: Only the first arg of ... is honoured. -b is optional.";
+ Usage: fftest [options]\n\
+ -r <filename> Read in previously-generated logartithm file\n\
+ -w <filename> Generate logarithms and write to file\n\
+ -g Generate logarithms without a file. Hold them in memory until user prompts.\n\
+ -b <upper bount> Specify a positive integer for the amount of logs to be generated.\n\
+ Default behaviour: If invoked with no options -g is assumed. If -b is unspecified a vast number is assumed (200mil).";
 
     int upperBound=0;
 
@@ -35,7 +40,7 @@ int main(int argc, char** argv){
     int mode=0;
     char *fileName = NULL;
 
-    if(argc>3){
+    if(argc>5){
         fprintf(stderr, "Invalid call; too many arguments!\n%s\n", banner);
         exit(1);
     }
@@ -72,14 +77,14 @@ int main(int argc, char** argv){
     }
     
     if (mode==0){
-        puts("Mode unset, assuming generate only.");
+        puts("Mode unset; assuming generate only.");
         mode=GENERATE_ONLY;
     }
 
     /* getopts complete, carry on */
     
     // This should handle unset and bad input to -b
-    if (upperBound==0){
+    if (upperBound<=0){
         printf("Total logs to generate is unset. Using default value of %d.\n", DEFAULT_BOUND);
         upperBound=DEFAULT_BOUND;
     }
@@ -87,15 +92,17 @@ int main(int argc, char** argv){
     // pointer to allocate array in heap memory
     float *logTable = malloc(upperBound* sizeof(float));
 
-    // Now do the work based on what was selected.
+    // Now do the work based on which was selected.
     switch (mode) {
         case READ_IN:
            readInLogFile(fileName, logTable, upperBound);
            break;
         case WRITE_OUT:
+           generateLogs(logTable, upperBound);
            writeOutLogFile(fileName, logTable, upperBound);
            break;
         case GENERATE_ONLY:
+           generateLogs(logTable, upperBound);
            generateLogsOnly(logTable, upperBound);
            break;
     }
@@ -106,7 +113,6 @@ int main(int argc, char** argv){
 }
 
 int generateLogsOnly(float *logTable, int upperBound){
-    generateLogs(logTable, upperBound);
     printLogTableToCon(logTable, upperBound);
 
     printf("generation of %d logs complete... ctrl+c or ENTER to quit.\n", upperBound);
@@ -114,13 +120,19 @@ int generateLogsOnly(float *logTable, int upperBound){
     return 0;
 }
 
-int readInLogFile(char *fileName, float *logTable, int upperBound){
+int readInLogFile(const char *fileName, float *logTable, int upperBound){
     puts("not yet ready sorry sir");
     return 0;
 }
 
-int writeOutLogFile(char *fileName, float* logTable, int upperBound){
-    puts("also not yet ready, sorry again");
+int writeOutLogFile(const char *fileName, const float *logTable, int upperBound){
+    FILE *logFile=fopen(fileName, "w+");
+    for(int i=0; i<upperBound; i++){
+        fprintf(logFile, "%4.20f\n", logTable[i]); // TODO: Improve formatting
+    }
+    fflush(logFile); // do we need this after every call to fprintf?
+    printf("Write out to %s complete. Wrote %d logs.\n", fileName, upperBound);
+    fclose(logFile);
     return 0;
 }
 
