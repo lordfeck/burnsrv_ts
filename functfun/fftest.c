@@ -13,11 +13,6 @@
 #include"ffglobals.h"
 #include"fftest.h"
 
-// mode definitions
-#define READ_IN 1
-#define WRITE_OUT 2
-#define GENERATE_ONLY 3
-
 int readInLogFile(const char *fileName, float *logTable, int upperBound);
 int writeOutLogFile(const char *fileName, const float* logTable, int upperBound);
 int generateLogsOnly(float *logTable, int upperBound);
@@ -84,7 +79,7 @@ int main(int argc, char** argv){
     /* getopts complete, carry on */
     
     // This should handle unset and bad input to -b
-    if (upperBound<=0){
+    if (upperBound<=0&&(mode!=READ_IN)){
         printf("Total logs to generate is unset. Using default value of %d.\n", DEFAULT_BOUND);
         upperBound=DEFAULT_BOUND;
     }
@@ -127,9 +122,14 @@ int readInLogFile(const char *fileName, float *logTable, int upperBound){
 
 int writeOutLogFile(const char *fileName, const float *logTable, int upperBound){
     FILE *logFile=fopen(fileName, "w+");
+    
+    // First write the file header and upperBound. 
+    fprintf(logFile, FFTEST_HEADER_V1, upperBound); 
+    
     for(int i=0; i<upperBound; i++){
         fprintf(logFile, "%4.20f\n", logTable[i]); // TODO: Improve formatting
     }
+
     fflush(logFile); // do we need this after every call to fprintf?
     printf("Write out to %s complete. Wrote %d logs.\n", fileName, upperBound);
     fclose(logFile);
@@ -140,7 +140,7 @@ int printLogTable(float *logTable, int upperBound){
     // print result TODO: better format; this goes well beyond 80cols
     for(int i=0; i<upperBound; i++){
         printf("ln(%d): %3.4f\t", i, logTable[i]);
-        if (i%10==0) puts(""); //newline
+        if (i%10==0) puts(""); //newline, also needs fixed
     }
     puts("");
     return 0;
@@ -157,8 +157,9 @@ int printLogTableToCon(float *logTable, int upperBound){
 }
 
 int generateLogs(float *logTable, int upperBound){
-    for(int i=0; i<upperBound; i++){
-        logTable[i]=log(i*1.0);
+    for(int i=1; i<=upperBound; i++){
+        // ln(0) is -inf... we don't want that
+        logTable[i-1]=log(i*1.0);
     }
     return 0;
 }
