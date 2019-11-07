@@ -13,9 +13,12 @@
 #include"ffglobals.h"
 #include"fftest.h"
 
-int readInLogFile(const char *fileName, float *logTable, int upperBound);
+#define STR_BUFFER_SIZE 20
+
+int readInLogFile(const char *fileName, float *logTable, int *upperBound);
 int writeOutLogFile(const char *fileName, const float* logTable, int upperBound);
 int generateLogsOnly(float *logTable, int upperBound);
+float *allocateLogTable(int upperBound);
 
 int main(int argc, char** argv){
     char *logo="   ________          __\n  / _/ _/ /____ ___ / /_\n / _/ _/ __/ -_|_-</ __/\n/_//_/ \\__/\\__/___/\\__/\n";
@@ -34,6 +37,7 @@ int main(int argc, char** argv){
     int thisArg;
     int mode=0;
     char *fileName = NULL;
+    float *logTable;
 
     if(argc>5){
         fprintf(stderr, "Invalid call; too many arguments!\n%s\n", banner);
@@ -84,19 +88,19 @@ int main(int argc, char** argv){
         upperBound=DEFAULT_BOUND;
     }
     
-    // pointer to allocate array in heap memory
-    float *logTable = malloc(upperBound* sizeof(float));
-
     // Now do the work based on which was selected.
     switch (mode) {
         case READ_IN:
-           readInLogFile(fileName, logTable, upperBound);
+           readInLogFile(fileName, logTable, &upperBound);
+           printf("UpperBound was: %d\n", upperBound);
            break;
         case WRITE_OUT:
+           logTable = allocateLogTable(upperBound);
            generateLogs(logTable, upperBound);
            writeOutLogFile(fileName, logTable, upperBound);
            break;
         case GENERATE_ONLY:
+           logTable = allocateLogTable(upperBound);
            generateLogs(logTable, upperBound);
            generateLogsOnly(logTable, upperBound);
            break;
@@ -107,6 +111,12 @@ int main(int argc, char** argv){
     return 0;
 }
 
+float *allocateLogTable(int upperBound){
+    // pointer to allocate array in heap memory
+    float *logTable = malloc(upperBound* sizeof(float));
+    return logTable;
+}
+
 int generateLogsOnly(float *logTable, int upperBound){
     printLogTableToCon(logTable, upperBound);
 
@@ -115,8 +125,35 @@ int generateLogsOnly(float *logTable, int upperBound){
     return 0;
 }
 
-int readInLogFile(const char *fileName, float *logTable, int upperBound){
-    puts("not yet ready sorry sir");
+// TODO: add read status by wrapper function, eg whether file could be
+// opened or whether the format is wrong
+int readInLogFile(const char *fileName, float *logTable, int *upperBound){
+    FILE *logFile=fopen(fileName, "r");
+    fscanf(logFile, FFTEST_HEADER_V1, upperBound);
+    printf("File %s opened with upperBound of %d.\n", fileName,  *upperBound);
+
+    logTable=allocateLogTable(*upperBound);
+    puts("Logtable Allocation Successful. Beginning ReadIn...");
+
+    char buffet[STR_BUFFER_SIZE];
+    int bufferStatus=1, i=0; 
+    //bufferStatus was used with sscanf
+    while (bufferStatus != EOF && i<*upperBound){
+        fgets(buffet, STR_BUFFER_SIZE, logFile);
+        logTable[i]=strtof(buffet, NULL);
+        printf("INDEX %d READ %4.20f\n", i, logTable[i]);
+/*
+        if (bufferStatus==0){
+           puts("read error");
+           fclose(logFile);
+           return 2;
+        }
+        */
+        i++;
+
+    }
+
+    fclose(logFile);
     return 0;
 }
 
@@ -127,7 +164,7 @@ int writeOutLogFile(const char *fileName, const float *logTable, int upperBound)
     fprintf(logFile, FFTEST_HEADER_V1, upperBound); 
     
     for(int i=0; i<upperBound; i++){
-        fprintf(logFile, "%4.20f\n", logTable[i]); // TODO: Improve formatting
+        fprintf(logFile, FLOAT_FORMAT, logTable[i]); // TODO: Improve formatting
     }
 
     fflush(logFile); // do we need this after every call to fprintf?
@@ -139,7 +176,7 @@ int writeOutLogFile(const char *fileName, const float *logTable, int upperBound)
 int printLogTable(float *logTable, int upperBound){
     // print result TODO: better format; this goes well beyond 80cols
     for(int i=0; i<upperBound; i++){
-        printf("ln(%d): %3.4f\t", i, logTable[i]);
+        printf("ln(%d): %2.4f\t", i, logTable[i]);
         if (i%10==0) puts(""); //newline, also needs fixed
     }
     puts("");

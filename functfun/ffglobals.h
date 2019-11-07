@@ -2,6 +2,7 @@
 typedef unsigned long int absoluteUint; 
 
 #define FFTEST_HEADER_V1 "|FFTEST_LOGARITHMS|FORMAT_V1|upperBound:%d|\n"
+#define FLOAT_FORMAT "%4.20f\n"
 
 // mode definitions - do NOT change!
 #define READ_IN 1
