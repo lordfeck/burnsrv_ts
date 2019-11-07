@@ -14,7 +14,7 @@
 #include"fftest.h"
 
 // move to fftest.h once finalised
-int readInLogFile(const char *fileName, float *logTable, int *upperBound);
+int readInLogFile(const char *fileName, float **logTable, int *upperBound);
 int writeOutLogFile(const char *fileName, const float* logTable, int upperBound);
 int generateLogsOnly(float *logTable, int upperBound);
 int idle(char *msg);
@@ -27,7 +27,7 @@ int main(int argc, char** argv){
  -r <filename> Read in previously-generated logartithm file\n\
  -w <filename> Generate logarithms and write to file\n\
  -g Generate logarithms without a file. Hold them in memory until user prompts.\n\
- -b <upper bount> Specify a positive integer for the amount of logs to be generated.\n\
+ -b <upper bount> Specify a positive integer for the amount of logs to be generated. Logs are generated from ln(1) to ln(b).\n\
  Default behaviour: If invoked with no options -g is assumed. If -b is unspecified a vast number is assumed (200mil).";
 
     int upperBound=0;
@@ -37,7 +37,7 @@ int main(int argc, char** argv){
     int thisArg;
     int mode=0;
     char *fileName = NULL;
-    float *logTable;
+    float *logTable = NULL;
 
     if(argc>5){
         fprintf(stderr, "Invalid call; too many arguments!\n%s\n", banner);
@@ -91,8 +91,10 @@ int main(int argc, char** argv){
     // Now do the work based on which was selected.
     switch (mode) {
         case READ_IN:
-           readInLogFile(fileName, logTable, &upperBound);
+           readInLogFile(fileName, &logTable, &upperBound);
+           #ifdef DEBUG
            printf("UpperBound was: %d\n", upperBound);
+           #endif
            printLogTableToCon(logTable, upperBound);
            idle("");
            break;
@@ -114,6 +116,7 @@ int main(int argc, char** argv){
 }
 
 int idle(char* msg){
+    puts("Currently holding the logarithm table in memory.");
     printf("%sCrtl+c or ENTER to quit.\n", msg);
 
     getchar();
@@ -123,45 +126,47 @@ int idle(char* msg){
 float *allocateLogTable(int upperBound){
     // pointer to allocate array in heap memory
     float *logTable = malloc(upperBound* sizeof(float));
+#ifdef DEBUG
+    if (logTable){
+        printf("Allocated float array with %d length.\n", upperBound);
+    }
+#endif
     return logTable;
 }
 
 int generateLogsOnly(float *logTable, int upperBound){
     printLogTableToCon(logTable, upperBound);
 
-    printf("generation of %d logs complete... ctrl+c or ENTER to quit.\n", upperBound);
-    getchar();
+    printf("generation of %d logs complete... ", upperBound);
+    idle("");
     return 0;
 }
 
 // TODO: add read status by wrapper function, eg whether file could be
 // opened or whether the format is wrong
-int readInLogFile(const char *fileName, float *logTable, int *upperBound){
+int readInLogFile(const char *fileName, float **logTable, int *upperBound){
     FILE *logFile=fopen(fileName, "r");
     fscanf(logFile, FFTEST_HEADER_V1, upperBound);
+    #ifdef DEBUG
     printf("File %s opened with upperBound of %d.\n", fileName,  *upperBound);
+    #endif
 
-    logTable=allocateLogTable(*upperBound);
-    puts("Logtable Allocation Successful. Beginning ReadIn...");
-
-    char buffet[STR_BUFFER_SIZE];
-    int bufferStatus=1, i=0; 
-    //bufferStatus was used with sscanf
-    while (bufferStatus != EOF && i<*upperBound){
-        fgets(buffet, STR_BUFFER_SIZE, logFile);
-        logTable[i]=(float)atof(buffet);
-        printf("INDEX %d READ %4.20f\n", i, logTable[i]);
-/*
-        if (bufferStatus==0){
-           puts("read error");
-           fclose(logFile);
-           return 2;
-        }
-        */
-        i++;
-
+    *logTable=malloc(*upperBound * sizeof(float));
+    if (*logTable){
+        puts("Logtable Allocation Successful. Beginning ReadIn...");
     }
-    puts("ReadIn Success.");
+    
+    char buffet[STR_BUFFER_SIZE];
+    int i=0; 
+    while (i<*upperBound){
+        fgets(buffet, STR_BUFFER_SIZE, logFile);
+        (*logTable)[i]=(float)atof(buffet);
+        #ifdef DEBUG
+        printf("INDEX %d READ %4.20f\n", i, (*logTable)[i]);
+        #endif
+        i++;
+    }
+    puts("ReadIn complete. Closing file.");
     fclose(logFile);
     return 0;
 }
@@ -173,10 +178,10 @@ int writeOutLogFile(const char *fileName, const float *logTable, int upperBound)
     fprintf(logFile, FFTEST_HEADER_V1, upperBound); 
     
     for(int i=0; i<upperBound; i++){
-        fprintf(logFile, FLOAT_FORMAT, logTable[i]); // TODO: Improve formatting
+        fprintf(logFile, FLOAT_FORMAT, logTable[i]); 
     }
 
-    fflush(logFile); // do we need this after every call to fprintf?
+    fflush(logFile); 
     printf("Write out to %s complete. Wrote %d logs.\n", fileName, upperBound);
     fclose(logFile);
     return 0;
@@ -185,8 +190,8 @@ int writeOutLogFile(const char *fileName, const float *logTable, int upperBound)
 int printLogTable(float *logTable, int upperBound){
     // print result TODO: better format; this goes well beyond 80cols
     for(int i=0; i<upperBound; i++){
-        printf("ln(%d): %2.4f\t", i, logTable[i]);
-        if (i%10==0) puts(""); //newline, also needs fixed
+        if (i%10==0&&i!=0) puts(""); 
+        printf("ln(%d): %2.4f\t", i+1, logTable[i]);
     }
     puts("");
     return 0;
