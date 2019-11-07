@@ -13,11 +13,11 @@
 #include"ffglobals.h"
 #include"fftest.h"
 
-#define STR_BUFFER_SIZE 20
-
+// move to fftest.h once finalised
 int readInLogFile(const char *fileName, float *logTable, int *upperBound);
 int writeOutLogFile(const char *fileName, const float* logTable, int upperBound);
 int generateLogsOnly(float *logTable, int upperBound);
+int idle(char *msg);
 float *allocateLogTable(int upperBound);
 
 int main(int argc, char** argv){
@@ -93,6 +93,8 @@ int main(int argc, char** argv){
         case READ_IN:
            readInLogFile(fileName, logTable, &upperBound);
            printf("UpperBound was: %d\n", upperBound);
+           printLogTableToCon(logTable, upperBound);
+           idle("");
            break;
         case WRITE_OUT:
            logTable = allocateLogTable(upperBound);
@@ -108,6 +110,13 @@ int main(int argc, char** argv){
 
     free(logTable); // may need to handle sigterm to ensure this is freed
 
+    return 0;
+}
+
+int idle(char* msg){
+    printf("%sCrtl+c or ENTER to quit.\n", msg);
+
+    getchar();
     return 0;
 }
 
@@ -140,7 +149,7 @@ int readInLogFile(const char *fileName, float *logTable, int *upperBound){
     //bufferStatus was used with sscanf
     while (bufferStatus != EOF && i<*upperBound){
         fgets(buffet, STR_BUFFER_SIZE, logFile);
-        logTable[i]=strtof(buffet, NULL);
+        logTable[i]=(float)atof(buffet);
         printf("INDEX %d READ %4.20f\n", i, logTable[i]);
 /*
         if (bufferStatus==0){
@@ -152,7 +161,7 @@ int readInLogFile(const char *fileName, float *logTable, int *upperBound){
         i++;
 
     }
-
+    puts("ReadIn Success.");
     fclose(logFile);
     return 0;
 }
