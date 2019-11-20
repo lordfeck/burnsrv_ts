@@ -7,12 +7,11 @@ if [ "$0" = "./logutil.sh" ]; then
     exit 1
 fi
 
-function printFatalError {
-    echo "$(formattedDate) Fatal Error: $1"
-    exit 1
-}
-
 function formattedDate {
     date +'%F %R'
 }
 
+function printFatalError {
+    echo "$(formattedDate) Fatal Error: $1"
+    exit 1
+}
