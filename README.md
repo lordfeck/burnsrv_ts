@@ -48,3 +48,21 @@ the testing procedures.
 * Save log table to disk
 * Read log table from disk
 * Log tables are allocated directly to heap memory
+
+## contrib/
+Any libraries that aren't authored by the maintainer. These however are
+necessary to build some of the source.
+
+## util/
+Util contains all utility scripts that will assist us with running experiments
+and any other future needs of this project.
+
+### util/testcfg
+Configurable test suite scripts. Edit testrun.config to specify a test scenario.
+Then execute runexpt.sh and it will execute the experiment according to your 
+specification. Written in bash, intended for GNU/Linux.
+
+A possible application is to have this run the aforementioned 'functfun'
+tool. We could also expand to include image, video, or any such other test.
+It is intended that all aspects of environmental preparation and log
+recording will be managed by these scripts.
