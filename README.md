@@ -67,15 +67,17 @@ tool. We could also expand to include image, video, or any such other test.
 It is intended that all aspects of environmental preparation and log
 recording will be managed by these scripts.
 
-** Requirements **
-Requires the ubiquitous BASH shell.
+**Requirements**
 
-** Usage ** 
+Requires the ubiquitous BASH shell to be installed.
+
+**Usage** 
+
 Edit `testrun.config` to configure the test run.
 
 Run `./functfun.sh` to execute the test run.
 
-** Features **
+**Features**
 * Configurable test runs
 * May be extended to use any unix command-line utility
 * Will support logging in an understandable format
