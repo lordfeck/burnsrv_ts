@@ -72,7 +72,8 @@ server {
 	location /stat {
 	    rtmp_stat all;
 	    rtmp_stat_stylesheet stat.xsl;
-
+	    allow all;
+	    add_header Refresh "3; $request_uri";
 	}
 
 	# rtmp control api
