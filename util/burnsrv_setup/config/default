@@ -69,19 +69,13 @@ server {
 		index index.html index.htm index.nginx-debian.html;
 	}
 
-}
-
-server {
-	listen 8080;
-	server_name localhost;
-
 	location /stat {
 	    rtmp_stat all;
 	    rtmp_stat_stylesheet stat.xsl;
 
 	}
 
-	# rtmp control
+	# rtmp control api
 	location /control {
 	    rtmp_control all;
 	}
@@ -89,12 +83,8 @@ server {
         location /stat.xsl {
             root /var/www/;
         }
-	location /h2 {
-	    root /var/www/;
-	}
+
 }
-
-
 
 # Virtual Host configuration for example.com
 #
