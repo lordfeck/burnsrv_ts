@@ -5,11 +5,17 @@ might happen our memory.
 
 ## Script Features
 
+`setup.sh`
+
 * Check that ports 80 and 1935 are free
 * Setup Nginx (if not already installed)
 * Install the RTMP mod (if not already installed)
 * Install nginx config and HTML files
 * Launch the server
+
+`setup2.sh`
+
+* Handles copying of files without any installation or preinstallation checks
 
 Compatible with Debian and Red Hat/CentOS package managers. Uses nginx and systemd.
 
