@@ -5,11 +5,13 @@
 # Author: MJB Authored: 04-12-19
 
 ##### EDIT BETWEEN THESE LINES TO HAVE MATCHING PATHS ####
+readonly rootDir="/local/mbrown49/burnsrv"
 readonly vidDir="/local/mbrown49/burnsrv/bbc1/"
 readonly htmlDir="/local/mbrown49/burnsrv/www/"
 # These need pathnames escaped for SED.
 readonly bbc1root='\/local\/mbrown49\/burnsrv\/bbc1'
 readonly wwwroot='\/local\/mbrown49\/burnsrv\/www'
+readonly userName="mbrown49"
 ##########################################################
 
 readonly nginxConfigDir="/etc/nginx/"
@@ -33,6 +35,8 @@ function create_dirs
     cp -nv bbc1/* $vidDir
     echo "Creating directory for HTML."
     mkdir -p $htmlDir
+    echo "Setting ownership for $userName on $rootDir."
+    chown -R $userName $rootDir
 }
 function copy_html
 {

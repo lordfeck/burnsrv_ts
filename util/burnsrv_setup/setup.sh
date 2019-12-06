@@ -5,11 +5,13 @@
 # Author: MJB
 
 ##### EDIT BETWEEN THESE LINES TO HAVE MATCHING PATHS ####
+readonly rootDir="/local/mbrown49/burnsrv"
 readonly vidDir="/local/mbrown49/burnsrv/bbc1/"
 readonly htmlDir="/local/mbrown49/burnsrv/www/"
 # These need pathnames escaped for SED.
 readonly bbc1root='\/local\/mbrown49\/burnsrv\/bbc1'
 readonly wwwroot='\/local\/mbrown49\/burnsrv\/www'
+readonly userName="thran"
 ##########################################################
 
 readonly nginxConfigDir="/etc/nginx/"
@@ -58,6 +60,8 @@ function create_dirs
     cp -nv bbc1/* $vidDir
     echo "Creating directory for HTML."
     mkdir -p $htmlDir
+    echo "Setting ownership for $userName on $rootDir."
+    chown -R $userName $rootDir
 }
 
 function copy_html
@@ -101,30 +105,32 @@ echo "Beginning Burnsrv Setup..."
 
 opsys=$(lsb_release -is)
 
-
 echo "Detected OS: ${opsys}"
 
-if [ $(id -u) -ne "0" ]; then
-    echo "Please run as root or sudo."
-    exit 1
-fi
-
-# We might want to just copy html or config
+# We can copy HTML without root
 if [ "$1" = "-w" ]; then
     copy_html
-    exit 0
-elif [ "$1" = "-c" ]; then
-    edit_config
-    copy_config
-    restart_nginx
     exit 0
 elif [ "$1" = "-h" ]; then
     echo -e $banner
     exit 0
 fi
 
-# Begin main body of script
+# Other ops need root/sudo
+if [ $(id -u) -ne "0" ]; then
+    echo "Please run as root or sudo."
+    exit 1
+fi
 
+# We might want to just copy config
+if [ "$1" = "-c" ]; then
+    edit_config
+    copy_config
+    restart_nginx
+    exit 0
+fi
+
+# Begin main body of script
 check_os
 if [ "$1" != "-p" ]; then
     check_ports

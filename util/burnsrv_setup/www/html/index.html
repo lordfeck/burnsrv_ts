@@ -13,8 +13,6 @@
                 document.getElementById("uptime").innerHTML = uptimeXhttp.responseText;
                 }
             };
-        uptimeXhttp.open("GET", "cgi-bin/uptime.cgi", true);
-        uptimeXhttp.send();
 
         var loadAvgXhttp = new XMLHttpRequest();
             loadAvgXhttp.onreadystatechange = function() {
@@ -22,8 +20,15 @@
                 document.getElementById("loadAvg").innerHTML = loadAvgXhttp.responseText;
                 }
             };
-        loadAvgXhttp.open("GET", "cgi-bin/loadavg.cgi", true);
-        loadAvgXhttp.send();
+
+        // Call update every second.
+        window.setInterval(function(){
+            uptimeXhttp.open("GET", "cgi-bin/uptime.cgi", true);
+            uptimeXhttp.send();
+
+            loadAvgXhttp.open("GET", "cgi-bin/loadavg.cgi", true);
+            loadAvgXhttp.send();
+        }, 1000);
     </script>
 </head>
 <body>
