@@ -15,7 +15,7 @@ Memories.
 
 # Repository Layout
 
-## mathlib/
+## [abandoned] mathlib/
 An experimental maths library written in pure C. Initially I thought to use it for
 functfun but later settled for math.h. However time wasn't wasted as it served an
 oppertunity to refresh my C knowledge.
@@ -56,6 +56,10 @@ necessary to build some of the source.
 ## util/
 Util contains all utility scripts that will assist us with running experiments
 and any other future needs of this project.
+
+## util/burnsrv_setup
+Scripts that will assist setting up an NGINX streaming server. See Readme there.
+Also contains scripts to conduct the streaming and HTML sources.
 
 ### util/testcfg
 Configurable test suite scripts. Edit `testrun.config` to specify a test scenario.
