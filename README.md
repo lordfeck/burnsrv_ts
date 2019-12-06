@@ -57,9 +57,12 @@ necessary to build some of the source.
 Util contains all utility scripts that will assist us with running experiments
 and any other future needs of this project.
 
-## util/burnsrv_setup
-Scripts that will assist setting up an NGINX streaming server. See Readme there.
+### util/burnsrv_setup
+Scripts that will assist setting up an NGINX streaming server. **See Readme there for details.**
 Also contains scripts to conduct the streaming and HTML sources.
+
+**Requirements**
+Requires the BASH shell, nginx, ffmpeg and libnginx-mod-rtmp to run.
 
 ### util/testcfg
 Configurable test suite scripts. Edit `testrun.config` to specify a test scenario.
