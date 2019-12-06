@@ -1,0 +1,3 @@
+ root ##WWWROOT##/home;
+
+root /home/thran/burnsrv/bbc1/vid;

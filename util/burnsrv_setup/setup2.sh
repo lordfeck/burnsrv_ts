@@ -8,8 +8,8 @@
 readonly vidDir="/home/thran/burnsrv/bbc1/"
 readonly htmlDir="/home/thran/burnsrv/www/"
 # These need pathnames escaped for SED.
-readonly bbc1root='\/home\/thran\/burnsrv\/bbc1\/'
-readonly wwwroot='\/home\/thran\/burnsrv\/www\/'
+readonly bbc1root='\/home\/thran\/burnsrv\/bbc1'
+readonly wwwroot='\/home\/thran\/burnsrv\/www'
 ##########################################################
 
 readonly nginxConfigDir="/etc/nginx/"
@@ -42,8 +42,8 @@ function copy_html
 function edit_config
 {
     echo "Editing config files with correct WWWroot."
-    sed -i "s/###WWWROOT###/$wwwroot/g" config/default
-    sed -i "s/###BBC1ROOT###/$bbc1root/g" config/nginx.conf 
+    sed -i "s/##WWWROOT##/$wwwroot/g" config/default
+    sed -i "s/##BBC1ROOT##/$bbc1root/g" config/nginx.conf 
 }
 
 function copy_config
@@ -90,5 +90,5 @@ edit_config
 copy_config
 create_dirs
 copy_html
-install_rtmp
+#install_rtmp
 restart_nginx
