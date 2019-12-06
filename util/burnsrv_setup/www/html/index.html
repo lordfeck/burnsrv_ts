@@ -10,30 +10,45 @@
         var uptimeXhttp = new XMLHttpRequest();
             uptimeXhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("uptime").innerHTML = uptimeXhttp.responseText;
+                    document.getElementById("uptime").innerHTML = uptimeXhttp.responseText;
                 }
             };
 
         var loadAvgXhttp = new XMLHttpRequest();
             loadAvgXhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("loadAvg").innerHTML = loadAvgXhttp.responseText;
+                    document.getElementById("loadAvg").innerHTML = loadAvgXhttp.responseText;
                 }
             };
 
+        var memUsageXhttp = new XMLHttpRequest();
+            memUsageXhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("memUsage").innerHTML = memUsageXhttp.responseText + " MB";
+                }
+            };
         // Call update every second.
-        window.setInterval(function(){
+        var intervalTimer = window.setInterval(function(){
             uptimeXhttp.open("GET", "cgi-bin/uptime.cgi", true);
             uptimeXhttp.send();
 
             loadAvgXhttp.open("GET", "cgi-bin/loadavg.cgi", true);
             loadAvgXhttp.send();
+
+            memUsageXhttp.open("GET", "cgi-bin/mem.cgi", true);
+            memUsageXhttp.send();
         }, 1000);
+        
+        // Stop Polling Button
+        function stopPollingBtn(){
+            window.clearInterval(intervalTimer);
+        }
+
     </script>
 </head>
 <body>
 	<div id="topBar">
-		<!--		<img id="logo" src="img/thranman_92px.jpg" alt="There's always something scundering me."> -->
+		<!--		<img id="logo" src="img/thranman_92px.jpg" > -->
 		<h1 id="titleHeader">burnsrv</h1>
 	</div>
 	<div id="bodyContainer">
@@ -62,6 +77,7 @@
         </table>
         <p class="newsItem">System Control</p>
         <p>Restart Livestream</p>
+        <p><a href="javascript:stopPollingBtn()" id="stopPolling">Stop Health Polling</a></p>
 	</div>
 	<div id="footer">
         <p class="footerText">THRANSOFT WWW style v1.0 // Created in 2019 by <a href="http://www.thran.uk/">MJB</a> // Carefully crafted using <a href="http://www.vim.org" target="_blank">Vim</a> // Mostly Valid HTML &amp; CSS</p>
