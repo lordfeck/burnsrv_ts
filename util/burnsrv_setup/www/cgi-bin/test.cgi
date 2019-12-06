@@ -17,6 +17,9 @@ wP "$(uptime)"
 
 wP "$(uname -a)"
 
+wH "Envrionment Variables:" "2"
+wP "$(/usr/bin/env)"
+
 wH 'Looks very well to me.' "2"
 wP "Test over."
 
