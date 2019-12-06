@@ -1,11 +1,17 @@
 #!/bin/bash
 
 # APRROXIMATE MEMORIES SETUP SCRIPT
-# V1.0 04-12-2019
+# V1.1 04-12-2019
 # Author: MJB
 
-readonly vidDir="/home/thran/burnsrv/bbc1/"
-readonly htmlDir="/home/thran/burnsrv/www/"
+##### EDIT BETWEEN THESE LINES TO HAVE MATCHING PATHS ####
+readonly vidDir="/local/mbrown49/burnsrv/bbc1/"
+readonly htmlDir="/local/mbrown49/burnsrv/www/"
+# These need pathnames escaped for SED.
+readonly bbc1root='\/local\/mbrown49\/burnsrv\/bbc1'
+readonly wwwroot='\/local\/mbrown49\/burnsrv\/www'
+##########################################################
+
 readonly nginxConfigDir="/etc/nginx/"
 readonly banner="setup.sh: Use -w to copy just WWW\nUse -c to copy just config.\nRun with no flags to perform a full install.\n-p Skip port check."
 
@@ -35,6 +41,14 @@ function check_os
         echo "Unsupported OS. Only CentOS and Ubuntu are supported."
         exit 1
     fi
+}
+
+
+function edit_config
+{
+    echo "Editing config files with correct WWWroot."
+    sed -i "s/##WWWROOT##/$wwwroot/g" config/default
+    sed -i "s/##BBC1ROOT##/$bbc1root/g" config/nginx.conf 
 }
 
 function create_dirs
@@ -118,6 +132,7 @@ else
     echo "Skipping port check."
 fi
 check_nginx_install
+edit_config
 copy_config
 create_dirs
 copy_html

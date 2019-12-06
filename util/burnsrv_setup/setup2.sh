@@ -28,11 +28,13 @@ function install_rtmp
 
 function create_dirs
 {
+    
     echo "Creating $vidDir dir for stream and copying video."
     mkdir -p $vidDir
-    cp -nfv bbc1/* $vidDir
+    cp -nv bbc1/* $vidDir
+    echo "Creating directory for HTML."
+    mkdir -p $htmlDir
 }
-
 function copy_html
 {
     echo "Copying HTML into $htmlDir."

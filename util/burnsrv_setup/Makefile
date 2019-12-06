@@ -1,4 +1,4 @@
-.PHONY: clean run debug
+.PHONY: clean 
 
 arm_files = bbc1/vidshere.txt config/default \
 			config/nginx.conf modrtmp-arm \
@@ -9,3 +9,5 @@ setup2.zip : Makefile
 
 armzip: setup2.zip
 
+clean:
+	rm -f setup2.zip
