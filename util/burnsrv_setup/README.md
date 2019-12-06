@@ -3,18 +3,22 @@
 Setup files that will build a streaming server. Also utility scripts to run a streaming server.
 
 **Burn:** *noun*, Ulster-Scots word meaning 'stream' or 'brook'. Also refers to what
-might happen our memory.
+happens to the RAM during these experiments.
 
 ## Requirements
-Requires the BASH shell, nginx, systemd, ffmpeg and libnginx-mod-rtmp to run.
+Requires the BASH shell, nginx, fcgiwrap, ffmpeg and libnginx-mod-rtmp to run.
 
 ## Script Features
 
 ### setup.sh
 
+This script is best used to create or restore a dev environment on an x86 machine.
+
 * Check that ports 80 and 1935 are free
 * Setup Nginx (if not already installed)
 * Install the RTMP mod (if not already installed)
+* Installs fcgiwrap.
+* Create dirs for HTML, video and CGI.
 * Install nginx config and HTML files
 * Launch the server
 
@@ -22,9 +26,11 @@ Requires the BASH shell, nginx, systemd, ffmpeg and libnginx-mod-rtmp to run.
 
 Run `./setup.sh`
 
+Call `./setup.sh -h` to see all options.
+
 ### setup2.sh
 
-Setup script intended for the x-gene machine.
+Setup script intended for the x-gene (ARM) machine.
 
 * Handles copying of files without any installation or preinstallation checks
 * By default will attempt to install an ARM-compiled libnginx-mod-rtmp
@@ -34,6 +40,8 @@ Setup script intended for the x-gene machine.
 `make armzip` and copy the zip file to the ARM system.
 
 Install nginx manually. Then run `./setup2.sh`
+
+Call `./setup2.sh -h` to see all options.
 
 ### startstream.sh
 

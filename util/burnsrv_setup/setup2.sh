@@ -28,7 +28,6 @@ function install_rtmp
 
 function create_dirs
 {
-    
     echo "Creating $vidDir dir for stream and copying video."
     mkdir -p $vidDir
     cp -nv bbc1/* $vidDir
@@ -77,6 +76,7 @@ if [ "$1" = "-w" ]; then
     copy_html
     exit 0
 elif [ "$1" = "-c" ]; then
+    edit_config
     copy_config
     restart_nginx
     exit 0
@@ -87,7 +87,6 @@ elif [ "$1" = "-h" ]; then
 fi
 
 # Begin main body of script
-
 edit_config
 copy_config
 create_dirs

@@ -75,12 +75,12 @@ function copy_config
 
 function check_nginx_install
 {
-    if ! 2>&1 $query nginx libnginx-mod-rtmp >/dev/null; then
-        echo "NGINX and/or rtmp module not installed!"
+    if ! 2>&1 $query nginx fcgiwrap libnginx-mod-rtmp >/dev/null; then
+        echo "NGINX and/or rtmp, fcgiwrap modules not installed!"
         echo "Installing..."
         install_nginx
     else
-        echo "Nginx and libnginx-mod-rtmp installed. Continuing..."
+        echo "Nginx, fcgiwrap and libnginx-mod-rtmp installed. Continuing..."
     fi
 }
 
