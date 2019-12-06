@@ -5,8 +5,25 @@
 	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 	<title>burnsrv</title>
 	<link rel="stylesheet" type="text/css" href="styles/layout_main.css">
+    <!-- JavaScript to update health stats. -->
     <script type="text/javascript">
+        var uptimeXhttp = new XMLHttpRequest();
+            uptimeXhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("uptime").innerHTML = uptimeXhttp.responseText;
+                }
+            };
+        uptimeXhttp.open("GET", "cgi-bin/uptime.cgi", true);
+        uptimeXhttp.send();
 
+        var loadAvgXhttp = new XMLHttpRequest();
+            loadAvgXhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("loadAvg").innerHTML = loadAvgXhttp.responseText;
+                }
+            };
+        loadAvgXhttp.open("GET", "cgi-bin/loadavg.cgi", true);
+        loadAvgXhttp.send();
     </script>
 </head>
 <body>
@@ -25,12 +42,14 @@
 		<table id="healthTable">
             <thead>
                 <tr>
+                    <th>Uptime</th>
                     <th>Memory Usage</th>
                     <th>Load Average</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
+                    <td id="uptime">Awaiting Data</td>
                     <td id="memUsage">Awaiting Data</td>
                     <td id="loadAvg">Awaiting Data</td>
                 </tr>

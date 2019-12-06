@@ -4,4 +4,4 @@
 
 writeHeader
 
-uptime -p
+uptime -p | sed 's/up //' | sed 's/utes//' | tr -d '\n' 
