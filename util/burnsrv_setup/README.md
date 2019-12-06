@@ -10,7 +10,7 @@ Requires the BASH shell, nginx, systemd, ffmpeg and libnginx-mod-rtmp to run.
 
 ## Script Features
 
-`setup.sh`
+### setup.sh
 
 * Check that ports 80 and 1935 are free
 * Setup Nginx (if not already installed)
@@ -19,9 +19,10 @@ Requires the BASH shell, nginx, systemd, ffmpeg and libnginx-mod-rtmp to run.
 * Launch the server
 
 ** Usage **
-* Run `./setup.sh`
 
-`setup2.sh`
+Run `./setup.sh`
+
+### setup2.sh
 
 Setup script intended for the x-gene machine.
 
@@ -29,11 +30,12 @@ Setup script intended for the x-gene machine.
 * By default will attempt to install an ARM-compiled libnginx-mod-rtmp
 
 **Usage**
+
 `make armzip` and copy the zip file to the ARM system.
 
 Install nginx manually. Then run `./setup2.sh`
 
-`startstream.sh`
+### startstream.sh
 
 Script that serves as the frontend to ffmpeg.
 
@@ -49,7 +51,9 @@ Run `./startstream.sh`
 Also see `./startstream.sh -h` for help.
 
 
-**Also contains:** Basic CGI scripts to monitor system health. These may be visited by the web server.
+###Also contains
+
+Basic CGI scripts to monitor system health. These may be visited by the web server.
 Nginx also has a handy inbuilt tool to report stream statistics. This is also enabled by default.
 
 Eventually I hope to monitor async system health with JavaScript requests in the browser. It isn't difficult
