@@ -4,8 +4,8 @@
 # V1.0 04-12-2019
 # Author: MJB
 
-readonly vidDir="/var/bbc1/"
-readonly htmlDir="/var/www/"
+readonly vidDir="/home/thran/burnsrv/bbc1/"
+readonly htmlDir="/home/thran/burnsrv/www/"
 readonly nginxConfigDir="/etc/nginx/"
 readonly banner="setup.sh: Use -w to copy just WWW\nUse -c to copy just config.\nRun with no flags to perform a full install.\n-p Skip port check."
 
@@ -43,6 +43,8 @@ function create_dirs
     echo "Creating $vidDir dir for stream and copying video."
     mkdir -p $vidDir
     cp -nv bbc1/* $vidDir
+    echo "Creating directory for HTML."
+    mkdir -p $htmlDir
 }
 
 function copy_html

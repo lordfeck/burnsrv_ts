@@ -38,7 +38,7 @@ server {
 	#
 	# include snippets/snakeoil.conf;
 
-	root /var/www/html;
+    root ##WWWROOT##/html;
 
 	server_name localhost;
 
@@ -82,7 +82,7 @@ server {
 	}
 
         location /stat.xsl {
-            root /var/www/;
+            root ##WWWROOT###;
         }
 
 }

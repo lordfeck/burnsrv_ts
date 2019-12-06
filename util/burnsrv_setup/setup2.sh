@@ -1,11 +1,17 @@
 #!/bin/bash
 
 # APRROXIMATE MEMORIES SETUP SCRIPT
-# V1.1-short 04-12-2019
-# Author: MJB
+# V1.2-short 06-12-2019
+# Author: MJB Authored: 04-12-19
 
-readonly vidDir="/var/bbc1/"
-readonly htmlDir="/var/www/"
+##### EDIT BETWEEN THESE LINES TO HAVE MATCHING PATHS ####
+readonly vidDir="/home/thran/burnsrv/bbc1/"
+readonly htmlDir="/home/thran/burnsrv/www/"
+# These need pathnames escaped for SED.
+readonly bbc1root='\/home\/thran\/burnsrv\/bbc1\/'
+readonly wwwroot='\/home\/thran\/burnsrv\/www\/'
+##########################################################
+
 readonly nginxConfigDir="/etc/nginx/"
 readonly rtmpEnabled="/etc/nginx/modules-enabled/50-mod-stream.conf"
 
@@ -31,6 +37,13 @@ function copy_html
 {
     echo "Copying HTML into $htmlDir."
     cp -rfv www/* $htmlDir  
+}
+
+function edit_config
+{
+    echo "Editing config files with correct WWWroot."
+    sed -i "s/###WWWROOT###/$wwwroot/g" config/default
+    sed -i "s/###BBC1ROOT###/$bbc1root/g" config/nginx.conf 
 }
 
 function copy_config
@@ -73,6 +86,7 @@ fi
 
 # Begin main body of script
 
+edit_config
 copy_config
 create_dirs
 copy_html
