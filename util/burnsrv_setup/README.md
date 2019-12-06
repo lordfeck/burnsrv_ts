@@ -18,7 +18,7 @@ Requires the BASH shell, nginx, systemd, ffmpeg and libnginx-mod-rtmp to run.
 * Install nginx config and HTML files
 * Launch the server
 
-** Usage **
+**Usage**
 
 Run `./setup.sh`
 
@@ -42,7 +42,7 @@ Script that serves as the frontend to ffmpeg.
 * Run a stream as configured in `stream.config`
 * Run a stream as configured from command line args
 
-** Usage **
+**Usage**
 
 Edit configuration inside `stream.config`
 
@@ -51,7 +51,7 @@ Run `./startstream.sh`
 Also see `./startstream.sh -h` for help.
 
 
-###Also contains
+### Also contains
 
 Basic CGI scripts to monitor system health. These may be visited by the web server.
 Nginx also has a handy inbuilt tool to report stream statistics. This is also enabled by default.
