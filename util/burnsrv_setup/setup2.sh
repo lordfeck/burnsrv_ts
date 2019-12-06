@@ -5,11 +5,11 @@
 # Author: MJB Authored: 04-12-19
 
 ##### EDIT BETWEEN THESE LINES TO HAVE MATCHING PATHS ####
-readonly vidDir="/home/thran/burnsrv/bbc1/"
-readonly htmlDir="/home/thran/burnsrv/www/"
+readonly vidDir="/local/mbrown49/burnsrv/bbc1/"
+readonly htmlDir="/local/mbrown49/burnsrv/www/"
 # These need pathnames escaped for SED.
-readonly bbc1root='\/home\/thran\/burnsrv\/bbc1'
-readonly wwwroot='\/home\/thran\/burnsrv\/www'
+readonly bbc1root='\/local\/mbrown49\/burnsrv\/bbc1'
+readonly wwwroot='\/local\/mbrown49\/burnsrv\/www'
 ##########################################################
 
 readonly nginxConfigDir="/etc/nginx/"
@@ -90,5 +90,5 @@ edit_config
 copy_config
 create_dirs
 copy_html
-#install_rtmp
+install_rtmp
 restart_nginx
