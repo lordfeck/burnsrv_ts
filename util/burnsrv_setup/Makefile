@@ -10,4 +10,6 @@ setup2.zip : Makefile
 armzip: setup2.zip
 
 clean:
+	@echo Removing zipfiles and reverting config.
+	git checkout -- config/
 	rm -f setup2.zip
