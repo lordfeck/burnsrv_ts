@@ -14,15 +14,10 @@
 #include"fftest.h"
 
 // move to fftest.h once finalised
-int readInLogFile(const char *fileName, float **logTable, int *upperBound);
-int writeOutLogFile(const char *fileName, const float* logTable, int upperBound);
-
 int readInBin(const char *fileName, float **logTable, int *upperBound);
 int writeOutBin(const char *fileName, const float* logTable, int upperBound);
 
-int generateLogsOnly(float *logTable, int upperBound);
 int idle(char *msg);
-float *allocateLogTable(int upperBound);
 
 int main(int argc, char** argv){
     char *logo="   ________          __\n  / _/ _/ /____ ___ / /_\n / _/ _/ __/ -_|_-</ __/\n/_//_/ \\__/\\__/___/\\__/\n";
@@ -36,6 +31,7 @@ int main(int argc, char** argv){
  Default behaviour: If invoked with no options -g is assumed. If -b is unspecified a vast number is assumed (200mil).";
 
     int upperBound=0;
+    int binaryMode = 0;
 
     /* handle getopts */
     opterr=1;
@@ -43,13 +39,6 @@ int main(int argc, char** argv){
     int mode=0;
     char *fileName = NULL;
     float *logTable = NULL;
-
-    int binaryMode = 0;
-
-    if(argc>5){
-        fprintf(stderr, "Invalid call; too many arguments!\n%s\n", banner);
-        exit(1);
-    }
 
     while ((thisArg=getopt(argc, argv, "hr:w:gb:n")) != -1){
         switch(thisArg){
