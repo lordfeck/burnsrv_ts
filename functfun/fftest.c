@@ -16,18 +16,23 @@
 // move to fftest.h once finalised
 int readInLogFile(const char *fileName, float **logTable, int *upperBound);
 int writeOutLogFile(const char *fileName, const float* logTable, int upperBound);
+
+int readInBin(const char *fileName, float **logTable, int *upperBound);
+int writeOutBin(const char *fileName, const float* logTable, int upperBound);
+
 int generateLogsOnly(float *logTable, int upperBound);
 int idle(char *msg);
 float *allocateLogTable(int upperBound);
 
 int main(int argc, char** argv){
     char *logo="   ________          __\n  / _/ _/ /____ ___ / /_\n / _/ _/ __/ -_|_-</ __/\n/_//_/ \\__/\\__/___/\\__/\n";
-    char *banner=" FFTEST: Fun Function Tests. Flood your RAM for fun! \n=====================================================\n\
+    char *banner=" FFTEST: Fun Function Tests. Flood thy RAM for fun! \n=====================================================\n\
  Usage: fftest [options]\n\
+ -n Use biNary mode for reading and writing.\n\
  -r <filename> Read in previously-generated logartithm file\n\
  -w <filename> Generate logarithms and write to file\n\
  -g Generate logarithms without a file. Hold them in memory until user prompts.\n\
- -b <upper bount> Specify a positive integer for the amount of logs to be generated. Logs are generated from ln(1) to ln(b).\n\
+ -b <upper bound> Specify a positive integer for the amount of logs to be generated. Logs are generated from ln(1) to ln(b).\n\
  Default behaviour: If invoked with no options -g is assumed. If -b is unspecified a vast number is assumed (200mil).";
 
     int upperBound=0;
@@ -39,12 +44,14 @@ int main(int argc, char** argv){
     char *fileName = NULL;
     float *logTable = NULL;
 
+    int binaryMode = 0;
+
     if(argc>5){
         fprintf(stderr, "Invalid call; too many arguments!\n%s\n", banner);
         exit(1);
     }
 
-    while ((thisArg=getopt(argc, argv, "hr:w:gb:")) != -1){
+    while ((thisArg=getopt(argc, argv, "hr:w:gb:n")) != -1){
         switch(thisArg){
             case'r':
                 fileName=optarg;
@@ -63,6 +70,9 @@ int main(int argc, char** argv){
             case'b':
                 upperBound=atoi(optarg);
                 break;
+            case'n':
+                binaryMode=1;
+                break;
             // print help banner in these cases
             case'h':
                 printf("%s\n%s\n",logo, banner);
@@ -78,6 +88,13 @@ int main(int argc, char** argv){
     if (mode==0){
         puts("Mode unset; assuming generate only.");
         mode=GENERATE_ONLY;
+    }
+
+    if (binaryMode){
+        puts("Reading and writing files in binary mode.");
+    } else {
+        puts("Reading and writing files in text mode. Note: This is slow and likely to consume much space.");
+        puts("Consider using binary mode and the conversion & comparison utility for analysis.");
     }
 
     /* getopts complete, carry on */
@@ -101,7 +118,13 @@ int main(int argc, char** argv){
         case WRITE_OUT:
            logTable = allocateLogTable(upperBound);
            generateLogs(logTable, upperBound);
-           writeOutLogFile(fileName, logTable, upperBound);
+
+           if (binaryMode){
+               writeOutBin(fileName, logTable, upperBound);
+           } else {
+               writeOutLogFile(fileName, logTable, upperBound);
+           }
+
            break;
         case GENERATE_ONLY:
            logTable = allocateLogTable(upperBound);
@@ -111,7 +134,6 @@ int main(int argc, char** argv){
     }
 
     free(logTable); // may need to handle sigterm to ensure this is freed
-
     return 0;
 }
 
@@ -171,6 +193,11 @@ int readInLogFile(const char *fileName, float **logTable, int *upperBound){
     return 0;
 }
 
+int readInBin(const char *fileName, float **logTable, int *upperBound){
+    printf("read in of binary file not yet implemented.\n");
+    return 1;
+}
+
 int writeOutLogFile(const char *fileName, const float *logTable, int upperBound){
     FILE *logFile=fopen(fileName, "w+");
     
@@ -184,6 +211,27 @@ int writeOutLogFile(const char *fileName, const float *logTable, int upperBound)
     fflush(logFile); 
     printf("Write out to %s complete. Wrote %d logs.\n", fileName, upperBound);
     fclose(logFile);
+    return 0;
+}
+
+int writeOutBin(const char *fileName, const float *logTable, int upperBound){
+    FILE *binFile=fopen(fileName, "wb+");
+    
+    // first write header
+    char *ffheader=FFTEST_HEADER_V1;
+    fwrite(ffheader, sizeof(ffheader), sizeof(ffheader), binFile);
+    fwrite(&upperBound, sizeof(int), 1, binFile);
+
+    // Then write table
+    fwrite(logTable, sizeof(float), upperBound, binFile);
+
+    if(feof(binFile)){
+        printf("Write out to %s complete. Wrote %d logs.\n", fileName, upperBound);
+    } else {
+        printf("Problem writing to %s! Data may be corrupted.", fileName);
+    }
+
+    fclose(binFile);
     return 0;
 }
 
