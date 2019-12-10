@@ -9,6 +9,10 @@ readonly banner="START STREAM SCRIPT\nUsage:\n-i <stream input file>
 -o <Stream server output URL>\n-e <encoding>\n-h show help
 Running with no input will use the settings in stream.config."
 
+function streamVideoFile {
+    ffmpeg -i $stream -c:v libx264 -crf 32 -c:a copy -preset veryfast -tune animation -f $encoding $server
+}
+
 # Handle arguments
 while getopts ":i:ho:e:" opt; do
     case $opt in
@@ -37,4 +41,4 @@ if [ -z $encoding ]; then
 fi
 
 # Begin stream
-ffmpeg -i $stream -f $encoding $server 
+streamVideoFile
