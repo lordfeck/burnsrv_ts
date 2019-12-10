@@ -55,11 +55,12 @@ div#bodyContainer {
 }
 
 img#logo {
-	float: left;
+	float: right;
 	display: inline-block;
-	width: 92px;
-	height: 92px;
-	margin-right: 4px;
+	width: 60px;
+	height: 60px;
+	margin-right: 14px;
+    margin-top: 8px;
 }
 
 div#footer{

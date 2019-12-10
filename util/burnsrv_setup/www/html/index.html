@@ -27,6 +27,15 @@
                     document.getElementById("memUsage").innerHTML = memUsageXhttp.responseText + " MB";
                 }
             };
+        var sysstats;
+        var sysReq = new XMLHttpRequest();
+            sysReq.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var sysstats = JSON.parse(sysReq.responseText);
+                     document.getElementById("rssUsage").innerHTML = sysstats.rss;
+                     document.getElementById("procCPU").innerHTML = sysstats.procCPU;
+                }
+            };
         // Call update every second.
         var intervalTimer = window.setInterval(function(){
             uptimeXhttp.open("GET", "cgi-bin/uptime.cgi", true);
@@ -37,6 +46,9 @@
 
             memUsageXhttp.open("GET", "cgi-bin/mem.cgi", true);
             memUsageXhttp.send();
+
+            sysReq.open("GET", "cgi-bin/jsonstats.cgi", true);
+            sysReq.send();
         }, 1000);
         
         // Stop Polling Button
@@ -48,7 +60,7 @@
 </head>
 <body>
 	<div id="topBar">
-		<!--		<img id="logo" src="img/thranman_92px.jpg" > -->
+    	<img id="logo" src="img/burnsrv.gif" >
 		<h1 id="titleHeader">burnsrv</h1>
 	</div>
 	<div id="bodyContainer">
@@ -63,12 +75,14 @@
 		<table class="healthTable">
             <thead>
                 <tr>
-                    <th>Process RSS Usage</th>
+                    <th>RSS Usage</th>
+                    <th>CPU Usage</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td id="rssUsage">Awaiting Data</td>
+                    <td id="procCPU">Awaiting Data</td>
                 </tr>
             </tbody>
         </table>

@@ -16,3 +16,22 @@ function wH {
 function writeHeader {
     echo -e 'Content-type: text/html\n'
 }
+
+function writeJSONHeader {
+    echo -e 'Content-type: application/json\n'
+}
+
+#JSON TAG
+function jT {
+    echo -n "\"$1\":"
+}
+
+#JSON FIELD
+function jF {
+    # JSON expects a comma after each field until the final
+    if [ "$2" = "f" ]; then
+        echo "\"$1\""
+    else
+        echo "\"$1\","
+    fi
+}
