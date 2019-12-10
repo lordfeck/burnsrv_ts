@@ -53,13 +53,28 @@
 	</div>
 	<div id="bodyContainer">
 		<div id="topMenu">
-			MENU: <a href="#">Burnsrv</a> // <a href="stat">RTMP Stats</a>
+			MENU: <a href="#">Burnsrv</a> // <a href="stat">Generated RTMP Stats</a>
 		</div>
 		<p class="newsItem">Burnsrv Stream List</p>
 		<p>Select a video to stream:</p>
 		<p>coming soon</p>
-		<p class="newsItem">System Health Monitor</p>
-		<table id="healthTable">
+		<p class="newsItem">StreamSrv Health Monitor</p>
+        <p>This section shows the memory usage of all NGINX processes. It will be expanded to include any other relevant measurable values.</p>
+		<table class="healthTable">
+            <thead>
+                <tr>
+                    <th>Process RSS Usage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="rssUsage">Awaiting Data</td>
+                </tr>
+            </tbody>
+        </table>
+
+		<p class="newsItem">Operating System Health Monitor</p>
+		<table class="healthTable">
             <thead>
                 <tr>
                     <th>Uptime</th>

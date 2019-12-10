@@ -38,10 +38,14 @@ function create_dirs
     echo "Setting ownership for $userName on $rootDir."
     chown -R $userName $rootDir
 }
+
 function copy_html
 {
     echo "Copying HTML into $htmlDir."
     cp -rfv www/* $htmlDir  
+
+    echo "Setting ownership for $userName on $htmlDir."
+    chown -R $userName $htmlDir
 }
 
 function edit_config

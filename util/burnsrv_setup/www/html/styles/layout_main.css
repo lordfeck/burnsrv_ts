@@ -68,11 +68,11 @@ div#footer{
 	padding-top: 0px;
 }
 
-table#healthTable {
+table.healthTable {
   border: 1px solid #aaddbb;
 }
 
-#healthTable td {
+.healthTable td {
 	min-width: 150px;
 	border: 1px solid #aaddbb;
 	text-align: center;

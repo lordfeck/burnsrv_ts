@@ -11,7 +11,7 @@ readonly htmlDir="/local/mbrown49/burnsrv/www/"
 # These need pathnames escaped for SED.
 readonly bbc1root='\/local\/mbrown49\/burnsrv\/bbc1'
 readonly wwwroot='\/local\/mbrown49\/burnsrv\/www'
-readonly userName="thran"
+readonly userName="mjb"
 ##########################################################
 
 readonly nginxConfigDir="/etc/nginx/"
@@ -68,6 +68,8 @@ function copy_html
 {
     echo "Copying HTML into $htmlDir."
     cp -rfv www/* $htmlDir  
+    echo "Setting recursive ownership for $userName on $htmlDir."
+    chown -R $userName $htmlDir
 }
 
 function copy_config
