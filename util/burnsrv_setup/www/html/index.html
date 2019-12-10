@@ -7,46 +7,20 @@
 	<link rel="stylesheet" type="text/css" href="styles/layout_main.css">
     <!-- JavaScript to update health stats. -->
     <script type="text/javascript">
-        var uptimeXhttp = new XMLHttpRequest();
-            uptimeXhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("uptime").innerHTML = uptimeXhttp.responseText;
-                }
-            };
-
-        var loadAvgXhttp = new XMLHttpRequest();
-            loadAvgXhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("loadAvg").innerHTML = loadAvgXhttp.responseText;
-                }
-            };
-
-        var memUsageXhttp = new XMLHttpRequest();
-            memUsageXhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("memUsage").innerHTML = memUsageXhttp.responseText + " MB";
-                }
-            };
         var sysstats;
         var sysReq = new XMLHttpRequest();
             sysReq.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    var sysstats = JSON.parse(sysReq.responseText);
+                     sysstats = JSON.parse(sysReq.responseText);
+                     document.getElementById("uptime").innerHTML = sysstats.uptime;
+                     document.getElementById("loadAvg").innerHTML = sysstats.loadAvg;
+                     document.getElementById("memUsage").innerHTML = sysstats.totalMem + " MB";
                      document.getElementById("rssUsage").innerHTML = sysstats.rss;
                      document.getElementById("procCPU").innerHTML = sysstats.procCPU;
                 }
             };
         // Call update every second.
         var intervalTimer = window.setInterval(function(){
-            uptimeXhttp.open("GET", "cgi-bin/uptime.cgi", true);
-            uptimeXhttp.send();
-
-            loadAvgXhttp.open("GET", "cgi-bin/loadavg.cgi", true);
-            loadAvgXhttp.send();
-
-            memUsageXhttp.open("GET", "cgi-bin/mem.cgi", true);
-            memUsageXhttp.send();
-
             sysReq.open("GET", "cgi-bin/jsonstats.cgi", true);
             sysReq.send();
         }, 1000);
