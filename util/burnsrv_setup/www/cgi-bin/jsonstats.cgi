@@ -25,6 +25,10 @@ function getLoadAvg {
     uptime |  awk -F 'load average:' '{ print $2 }' | tr -d ',' | tr -d '\n'
 }
 
+function getNginxRSS {
+    ps --no-headers -C nginx -o rss |  awk '{rss += $1} END {print rss}'
+}
+
 # Begin JSON composition
 echo "{"
 
@@ -41,6 +45,9 @@ jT "rss"
 jF "$(calculateRSS)"
 
 jT "procCPU"
-jF "$(calculateCPU)" "f"
+jF "$(calculateCPU)" 
 
-echo -n "}"
+jT "nginxRssKb"
+jF "$(getNginxRSS)" "f"
+
+echo "}"

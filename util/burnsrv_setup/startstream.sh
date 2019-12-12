@@ -10,7 +10,7 @@ readonly banner="START STREAM SCRIPT\nUsage:\n-i <stream input file>
 Running with no input will use the settings in stream.config."
 
 function streamVideoFile {
-    ffmpeg -i $stream -c:v libx264 -crf 32 -c:a copy -preset veryfast -tune animation -f $encoding $server
+    ffmpeg -i $stream -c:v libx264 -crf 32 -c:a copy -preset veryfast -tune animation -f flv $server
 }
 
 # Handle arguments
@@ -33,11 +33,6 @@ fi
 if [ -z $server ]; then
     echo "Using configured server $defaultServer."
     server="$defaultServer"
-fi
-
-if [ -z $encoding ]; then
-    echo "Using configured server $defaultEncoding."
-    encoding="$defaultEncoding"
 fi
 
 # Begin stream
