@@ -5,11 +5,7 @@
 
 writeJSONHeader
 
-function calculateRSS {
-    echo -n "SOON"
-}
-
-function calculateCPU {
+function getNginxCPU {
     echo -n "ALSO SOON"
 }
 
@@ -41,11 +37,8 @@ jF "$(getTotalMem)"
 jT "loadAvg"
 jF "$(getLoadAvg)"
 
-jT "rss"
-jF "$(calculateRSS)"
-
-jT "procCPU"
-jF "$(calculateCPU)" 
+jT "nginxCPU"
+jF "$(getNginxCPU)" 
 
 jT "nginxRssKb"
 jF "$(getNginxRSS)" "f"
