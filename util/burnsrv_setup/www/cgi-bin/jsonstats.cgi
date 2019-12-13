@@ -5,6 +5,7 @@
 
 writeJSONHeader
 
+# PS returns perc of CPU time / time program has been running.
 function getNginxCPU {
     ps --no-headers -C nginx -o %cpu | awk '{cpu += $1} END {print cpu}'
 }
