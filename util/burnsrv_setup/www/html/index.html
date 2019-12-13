@@ -16,7 +16,7 @@
                      document.getElementById("loadAvg").innerHTML = sysstats.loadAvg;
                      document.getElementById("memUsage").innerHTML = sysstats.totalMem + " MB";
                      document.getElementById("rssUsage").innerHTML = sysstats.nginxRssKb + " KB";
-                     document.getElementById("procCPU").innerHTML = sysstats.nginxCPU;
+                     document.getElementById("procCPU").innerHTML = sysstats.nginxCPU + "%";
                 }
             };
         // Call update every second.

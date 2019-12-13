@@ -6,7 +6,7 @@
 writeJSONHeader
 
 function getNginxCPU {
-    echo -n "ALSO SOON"
+    ps --no-headers -C nginx -o %cpu | awk '{cpu += $1} END {print cpu}'
 }
 
 function getUptime {
