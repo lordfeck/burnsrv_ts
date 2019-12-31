@@ -5,8 +5,9 @@
 
 writeJSONHeader
 
+# CPU Usage in tenths of a percent
 function getNginxCPU {
-    echo -n "ALSO SOON"
+    ps --no-headers -C nginx -o cp | awk '{cp += $1} END {print cp}'
 }
 
 function getUptime {
@@ -21,6 +22,7 @@ function getLoadAvg {
     uptime |  awk -F 'load average:' '{ print $2 }' | tr -d ',' | tr -d '\n'
 }
 
+# Resident set size; total of process in memory
 function getNginxRSS {
     ps --no-headers -C nginx -o rss |  awk '{rss += $1} END {print rss}'
 }
