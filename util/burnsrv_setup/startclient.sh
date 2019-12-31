@@ -3,6 +3,8 @@
 # APPROXIMATE MEMORIES CLIENT SCRIPT
 # Silent operation; pipes to dev/null
 # Author: MJB Authored: 10-12-2019
+
+readonly maxCountPrint="10"
 readonly banner="Start Client Stream. Usage:\n\
     -h show help\n\
     -l stream using live stream\n\
@@ -19,17 +21,17 @@ function vodStream {
 }
 
 function spawnStreams {
-    if [ "$clientCount" -ge "50" ]; then
-        echo "Over 50 clients spawned. Skipping some individual messages."
-    fi
+#    if [ "$clientCount" -ge "$maxCountPrint" ]; then
+#        echo "Over $maxCountPrint clients spawned. Skipping some individual messages."
+#    fi
 
     while [ "0" -lt "$clientCount" ]; do
         vodStream &
         ((clientCount--))
 
-        if [ "$clientCount" -le "50" ]; then
-            echo "SPAWNED $clientCount"
-        fi
+#        if [ "$clientCount" -le "$maxCountPrint" ]; then
+#            echo "SPAWNED $clientCount"
+#        fi
     done
 
     echo "Client spawn complete. Awaiting user interrupt."

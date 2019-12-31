@@ -9,6 +9,10 @@ writeJSONHeader
 function getNginxCPU {
     ps --no-headers -C nginx -o cp | awk '{cp += $1} END {print cp}'
 }
+# PS returns perc of CPU time / time program has been running.
+function getNginxCPUPerc {
+    ps --no-headers -C nginx -o %cpu | awk '{cpu += $1} END {print cpu}'
+}
 
 function getUptime {
     uptime -p | sed 's/up //' | sed 's/utes//' | tr -d '\n' 
@@ -41,6 +45,9 @@ jF "$(getLoadAvg)"
 
 jT "nginxCPU"
 jF "$(getNginxCPU)" 
+
+jT "nginxCPUPerc"
+jF "$(getNginxCPUPerc)" 
 
 jT "nginxRssKb"
 jF "$(getNginxRSS)" "f"

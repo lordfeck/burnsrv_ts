@@ -11,7 +11,7 @@ readonly htmlDir="/local/mbrown49/burnsrv/www/"
 # These need pathnames escaped for SED.
 readonly bbc1root='\/local\/mbrown49\/burnsrv\/bbc1'
 readonly wwwroot='\/local\/mbrown49\/burnsrv\/www'
-readonly userName="mjb"
+readonly userName="thran"
 ##########################################################
 
 readonly nginxConfigDir="/etc/nginx/"
