@@ -8,16 +8,9 @@
 #include<stdlib.h>
 #include<math.h>
 #include<unistd.h>
-#include<string.h>
 
 #include"ffglobals.h"
 #include"fftest.h"
-
-// move to fftest.h once finalised
-int readInBin(const char *fileName, float **logTable, int *upperBound);
-int writeOutBin(const char *fileName, const float* logTable, int upperBound);
-
-int idle(char *msg);
 
 int main(int argc, char** argv){
     char *logo="   ________          __\n  / _/ _/ /____ ___ / /_\n / _/ _/ __/ -_|_-</ __/\n/_//_/ \\__/\\__/___/\\__/\n";

@@ -11,7 +11,7 @@ $(TEST_EXEC): $(TEST_EXEC).c
 	$(CC) $(TEST_EXEC).c -o $(TEST_EXEC) -lm
 
 $(CMP_EXEC): $(CMP_EXEC).c 
-	$(CC) $(CMP_EXEC).c -o $(CMP_EXEC)
+	$(CC) $(TEST_EXEC).c $(CMP_EXEC).c -o $(CMP_EXEC) -lm
 
 debug: $(TEST_EXEC).c 
 	$(CC) $(FLAGS) $(TEST_EXEC).c -o $(TEST_EXEC) -lm
