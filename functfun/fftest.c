@@ -3,12 +3,12 @@
 /* Funct Fun Test */
 /* Generate a large log table: */
 /* Dump it in a text file or put it in RAM as you desire.*/
-/* Uses the mature, stabler Cmath library.*/
 /*****************************************************************************/
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
 #include<unistd.h>
+#include<string.h>
 
 #include"ffglobals.h"
 #include"fftest.h"
@@ -97,7 +97,11 @@ int main(int argc, char** argv){
     // Now do the work based on which was selected.
     switch (mode) {
         case READ_IN:
-           readInLogFile(fileName, &logTable, &upperBound);
+           if (binaryMode) {
+               readInBin(fileName, &logTable, &upperBound);
+           } else {
+               readInLogFile(fileName, &logTable, &upperBound);
+           }
            #ifdef DEBUG
            printf("UpperBound was: %d\n", upperBound);
            #endif
@@ -168,23 +172,39 @@ int readInLogFile(const char *fileName, float **logTable, int *upperBound){
     }
     
     char buffet[STR_BUFFER_SIZE];
-    int i=0; 
-    while (i<*upperBound){
+
+    for(int i=0; i<*upperBound; i++) {
         fgets(buffet, STR_BUFFER_SIZE, logFile);
         (*logTable)[i]=(float)atof(buffet);
         #ifdef DEBUG
         printf("INDEX %d READ %4.20f\n", i, (*logTable)[i]);
         #endif
-        i++;
     }
+
     puts("ReadIn complete. Closing file.");
     fclose(logFile);
     return 0;
 }
 
 int readInBin(const char *fileName, float **logTable, int *upperBound){
-    printf("read in of binary file not yet implemented.\n");
-    return 1;
+    FILE *binFile=fopen(fileName, "rb");
+    
+    // read size in integer then allocate log table
+    fread(upperBound, sizeof(int), 1, binFile);
+    #ifdef DEBUG
+    printf("Upper Bound Read: %d\n", *upperBound);
+    #endif
+    *logTable=malloc(*upperBound * sizeof(float));
+    
+    if (logTable){
+        puts("Logtable Allocation Successful. Beginning ReadIn...");
+    }
+
+    // read in table
+    fread((*logTable), sizeof(float), *upperBound, binFile);
+
+    fclose(binFile);
+    return 0;
 }
 
 int writeOutLogFile(const char *fileName, const float *logTable, int upperBound){
@@ -204,16 +224,15 @@ int writeOutLogFile(const char *fileName, const float *logTable, int upperBound)
 }
 
 int writeOutBin(const char *fileName, const float *logTable, int upperBound){
-    FILE *binFile=fopen(fileName, "wb+");
+    // open file for writing in bin, overwrite if existing
+    FILE *binFile=fopen(fileName, "wb");
     
-    // first write header
-    char *ffheader=FFTEST_HEADER_V1;
-    fwrite(ffheader, sizeof(ffheader), sizeof(ffheader), binFile);
+    // write size in integer (remember to read)
     fwrite(&upperBound, sizeof(int), 1, binFile);
-
-    // Then write table
+    // write table
     fwrite(logTable, sizeof(float), upperBound, binFile);
 
+    puts("These warnings may be incorrect. Please disregard for now.");
     if(feof(binFile)){
         printf("Write out to %s complete. Wrote %d logs.\n", fileName, upperBound);
     } else {
