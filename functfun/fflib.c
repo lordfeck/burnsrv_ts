@@ -9,7 +9,15 @@
 
 int readInBin(const char *fileName, float **logTable, int *upperBound){
     FILE *binFile=fopen(fileName, "rb");
-    
+
+    #ifdef DEBUG
+    if (binFile!=NULL) {
+        fprintf(stderr, "File: %s successfully opened.\n", fileName);
+    } else {
+        fprintf(stderr, "Problem opening the file %s.\n", fileName);
+    }
+    #endif
+   
     // read size in integer then allocate log table
     fread(upperBound, sizeof(int), 1, binFile);
     #ifdef DEBUG
