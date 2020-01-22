@@ -6,3 +6,7 @@
 int readInBin(const char *fileName, float **logTable, int *upperBound);
 int writeOutBin(const char *fileName, const float* logTable, int upperBound);
 
+// Text Mode Functions
+int readInTxt(const char *fileName, float **logTable, int *upperBound);
+int writeOutTxt(const char *fileName, const float* logTable, int upperBound);
+

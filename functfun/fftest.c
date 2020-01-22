@@ -94,7 +94,7 @@ int main(int argc, char** argv){
            if (binaryMode) {
                readInBin(fileName, &logTable, &upperBound);
            } else {
-               readInLogFile(fileName, &logTable, &upperBound);
+               readInTxt(fileName, &logTable, &upperBound);
            }
            #ifdef DEBUG
            printf("UpperBound was: %d\n", upperBound);
@@ -109,7 +109,7 @@ int main(int argc, char** argv){
            if (binaryMode){
                writeOutBin(fileName, logTable, upperBound);
            } else {
-               writeOutLogFile(fileName, logTable, upperBound);
+               writeOutTxt(fileName, logTable, upperBound);
            }
 
            break;
@@ -148,51 +148,6 @@ int generateLogsOnly(float *logTable, int upperBound){
 
     printf("generation of %d logs complete... ", upperBound);
     idle("");
-    return 0;
-}
-
-// TODO: add read status by wrapper function, eg whether file could be
-// opened or whether the format is wrong
-int readInLogFile(const char *fileName, float **logTable, int *upperBound){
-    FILE *logFile=fopen(fileName, "r");
-    fscanf(logFile, FFTEST_HEADER_V1, upperBound);
-    #ifdef DEBUG
-    printf("File %s opened with upperBound of %d.\n", fileName,  *upperBound);
-    #endif
-
-    *logTable=malloc(*upperBound * sizeof(float));
-    if (*logTable){
-        puts("Logtable Allocation Successful. Beginning ReadIn...");
-    }
-    
-    char buffet[STR_BUFFER_SIZE];
-
-    for(int i=0; i<*upperBound; i++) {
-        fgets(buffet, STR_BUFFER_SIZE, logFile);
-        (*logTable)[i]=(float)atof(buffet);
-        #ifdef DEBUG
-        printf("INDEX %d READ %4.20f\n", i, (*logTable)[i]);
-        #endif
-    }
-
-    puts("ReadIn complete. Closing file.");
-    fclose(logFile);
-    return 0;
-}
-
-int writeOutLogFile(const char *fileName, const float *logTable, int upperBound){
-    FILE *logFile=fopen(fileName, "w+");
-    
-    // First write the file header and upperBound. 
-    fprintf(logFile, FFTEST_HEADER_V1, upperBound); 
-    
-    for(int i=0; i<upperBound; i++){
-        fprintf(logFile, FLOAT_FORMAT, logTable[i]); 
-    }
-
-    fflush(logFile); 
-    printf("Write out to %s complete. Wrote %d logs.\n", fileName, upperBound);
-    fclose(logFile);
     return 0;
 }
 
