@@ -1,6 +1,5 @@
 /* FFcmp; read in binfiles and calculate no. of errors
  * Authored: 20/01/2020
- *
  */
 
 #include<stdlib.h>
@@ -9,9 +8,6 @@
 #include"ffglobals.h"
 #include"fflib.h"
 #include"ffcmp.h"
-
-float calculateErrorFraction(int baseDiff, int upperBound);
-int calculateBaseDiff(float *logTable1, float *logTable2, int upperBound);
 
 int main (int argc, char** argv)
 {
