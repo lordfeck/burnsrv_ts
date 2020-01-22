@@ -10,7 +10,7 @@
 #include"fflib.h"
 #include"ffcmp.h"
 
-float calculateErrorRate(int baseDiff, int upperBound);
+float calculateErrorFraction(int baseDiff, int upperBound);
 int calculateBaseDiff(float *logTable1, float *logTable2, int upperBound);
 
 int main (int argc, char** argv)
@@ -25,10 +25,11 @@ int main (int argc, char** argv)
     float *logTable1, *logTable2;
     int upperBound1, upperBound2;
     int baseDiff;
+    float errorFraction;
 
     printf("Argc: %d\n", argc);
 
-    if (argc <2) {
+    if (argc <3) {
         puts("Two arguments required. Go and have two rows with a political opposite.");
         exit(1);
     }
@@ -50,6 +51,8 @@ int main (int argc, char** argv)
 
     baseDiff=calculateBaseDiff(logTable1, logTable2, upperBound1);
     printf("Calculated base diff: %d \n", baseDiff);
+    errorFraction=calculateErrorFraction(baseDiff, upperBound1);
+    printf("Calculated Error Percentage: %5.2f\n", errorFraction*100.0);
 
     return 0;
 }
@@ -57,8 +60,16 @@ int main (int argc, char** argv)
 int calculateBaseDiff(float *logTable1, float *logTable2, int upperBound) {
     int baseDiff=0;
     for (int i=0; i<upperBound; i++) {
-        if(logTable1[i]!=logTable2[i]) baseDiff++;
+        if(logTable1[i]!=logTable2[i]) {
+            #ifdef DEBUG
+            printf("Mismatch at index %d. %f is not %f.\n", i, logTable1[i], logTable2[i]);
+            #endif
+            baseDiff++;
+        }
     }
     return baseDiff;
 }
 
+float calculateErrorFraction(int baseDiff, int upperBound) {
+    return ((float)baseDiff/(float)upperBound);
+}
