@@ -7,7 +7,7 @@
 #include<stdio.h>
 
 #include"ffglobals.h"
-#include"fftest.h"
+#include"fflib.h"
 #include"ffcmp.h"
 
 int main (int argc, char** argv)
