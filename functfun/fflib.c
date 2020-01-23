@@ -25,10 +25,11 @@ int readInBin(const char *fileName, float **logTable, int *upperBound){
     #endif
     *logTable=malloc(*upperBound * sizeof(float));
     
+    #ifdef DEBUG
     if (logTable){
         puts("Logtable Allocation Successful. Beginning ReadIn...");
     }
-
+    #endif
     // read in table
     fread((*logTable), sizeof(float), *upperBound, binFile);
 
@@ -85,10 +86,13 @@ int readInTxt(const char *fileName, float **logTable, int *upperBound){
     #endif
 
     *logTable=malloc(*upperBound * sizeof(float));
+
+    #ifdef DEBUG
     if (*logTable){
         puts("Logtable Allocation Successful. Beginning ReadIn...");
     }
-    
+    #endif 
+
     char buffet[STR_BUFFER_SIZE];
 
     for(int i=0; i<*upperBound; i++) {

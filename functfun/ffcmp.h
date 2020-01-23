@@ -5,3 +5,4 @@
 
 float calculateErrorFraction(int baseDiff, int upperBound);
 int calculateBaseDiff(float *logTable1, float *logTable2, int upperBound);
+int returnLowerBound(int upperBound1, int upperBound2);
