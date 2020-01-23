@@ -2,7 +2,7 @@ CC = gcc
 TEST_EXEC = fftest
 CMP_EXEC = ffcmp
 
-.PHONY: clean run debug all
+.PHONY: clean run debug all cleanbin
 
 # Need to call GCC with -lm to link math library defined in math.h
 all: fftest ffcmp ffcnv
@@ -28,4 +28,4 @@ run: $(TEST_EXEC)
 	./$(TEST_EXEC)
 
 clean:
-	@rm -vf $(TEST_EXEC) $(CMP_EXEC) ffi ffcnv *.o
+	@rm -vf $(TEST_EXEC) $(CMP_EXEC) ffi ffcnv *.o *.bin

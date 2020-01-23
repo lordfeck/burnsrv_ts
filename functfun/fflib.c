@@ -44,14 +44,14 @@ int writeOutBin(const char *fileName, const float *logTable, int upperBound){
     fwrite(&upperBound, sizeof(int), 1, binFile);
     // write table
     fwrite(logTable, sizeof(float), upperBound, binFile);
-
-    puts("These warnings may be incorrect. Please disregard for now.");
-    if(feof(binFile)){
-        printf("Write out to %s complete. Wrote %d logs.\n", fileName, upperBound);
-    } else {
+    
+    if(ferror(binFile)){
         printf("Problem writing to %s! Data may be corrupted.", fileName);
+    } else {
+        printf("Write out to %s complete. Wrote %d logs.\n", fileName, upperBound);
     }
 
+    fflush(binFile);
     fclose(binFile);
     return 0;
 }
@@ -65,9 +65,14 @@ int writeOutTxt(const char *fileName, const float *logTable, int upperBound){
     for(int i=0; i<upperBound; i++){
         fprintf(logFile, FLOAT_FORMAT, logTable[i]); 
     }
+    
+    if(ferror(logFile)){
+        printf("Problem writing to %s! Data may be corrupted.", fileName);
+    } else {
+        printf("Write out to %s complete. Wrote %d logs.\n", fileName, upperBound);
+    }
 
     fflush(logFile); 
-    printf("Write out to %s complete. Wrote %d logs.\n", fileName, upperBound);
     fclose(logFile);
     return 0;
 }
@@ -94,7 +99,9 @@ int readInTxt(const char *fileName, float **logTable, int *upperBound){
         #endif
     }
 
+    #ifdef DEBUG 
     puts("ReadIn complete. Closing file.");
+    #endif
     fclose(logFile);
     return 0;
 }

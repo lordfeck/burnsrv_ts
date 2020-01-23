@@ -8,7 +8,6 @@
 
 #include"fflib.h"
 #include"ffglobals.h"
-#include"ffcnv.h"
 
 // Mode definitions
 #define NONE 0
@@ -25,6 +24,7 @@ Output Formats: -n biNary\n\
     char *inFileName = NULL;
     char *outFileName = NULL;
     float *logTable = NULL;
+    int upperBound=-1;
 
     /* handle getopts */
     opterr=1;
@@ -45,15 +45,15 @@ Output Formats: -n biNary\n\
                 #endif
                 break;
             case'n':
-                mode=BINTOTXT;
-                #ifdef DEBUG
-                fprintf(stderr, "mode set as bintotxt.\n");
-                #endif
-                break;
-            case't':
                 mode=TXTTOBIN;
                 #ifdef DEBUG
                 fprintf(stderr, "mode set as txttobin.\n");
+                #endif
+                break;
+            case't':
+                mode=BINTOTXT;
+                #ifdef DEBUG
+                fprintf(stderr, "mode set as bintotxt.\n");
                 #endif
                 break;
             // print help banner in these cases
@@ -82,5 +82,23 @@ Output Formats: -n biNary\n\
         fprintf(stderr, "Conversion mode unset. Cannot continue.\n");
         exit(1);
     }
-
+    
+    // Now do the conversion.
+    switch (mode) {
+        case BINTOTXT:
+            readInBin(inFileName, &logTable, &upperBound);
+            fprintf(stderr, "Read in of %d logs from %s complete. Converting to text.\n", upperBound, inFileName);
+            writeOutTxt(outFileName, logTable, upperBound);
+            break;
+        case TXTTOBIN:
+            readInTxt(inFileName, &logTable, &upperBound);
+            fprintf(stderr, "Read in of %d logs from %s complete. Converting to binary.\n", upperBound, inFileName);
+            writeOutBin(outFileName, logTable, upperBound);
+            break;
+        default:
+            fprintf(stderr, "Unexpected error.\n");
+            break;
+    }
+    printf("Conversion from %s to %s complete.\n", inFileName, outFileName);
+    return 0;
 }
