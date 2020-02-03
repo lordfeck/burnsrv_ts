@@ -4,17 +4,8 @@
 # V1.1 04-12-2019
 # Author: MJB
 
-##### EDIT BETWEEN THESE LINES TO HAVE MATCHING PATHS ####
-readonly rootDir="/local/mbrown49/burnsrv"
-readonly vidDir="/local/mbrown49/burnsrv/bbc1/"
-readonly htmlDir="/local/mbrown49/burnsrv/www/"
-# These need pathnames escaped for SED.
-readonly bbc1root='\/local\/mbrown49\/burnsrv\/bbc1'
-readonly wwwroot='\/local\/mbrown49\/burnsrv\/www'
-readonly userName="thran"
-##########################################################
+. setup.config
 
-readonly nginxConfigDir="/etc/nginx/"
 readonly banner="setup.sh: Use -w to copy just WWW\nUse -c to copy just config.\nRun with no flags to perform a full install.\n-p Skip port check."
 
 function check_ports
@@ -45,14 +36,6 @@ function check_os
     fi
 }
 
-
-function edit_config
-{
-    echo "Editing config files with correct WWWroot."
-    sed -i "s/##WWWROOT##/$wwwroot/g" config/default
-    sed -i "s/##BBC1ROOT##/$bbc1root/g" config/nginx.conf 
-}
-
 function create_dirs
 {
     echo "Creating $vidDir dir for stream and copying video."
@@ -77,6 +60,13 @@ function copy_config
     echo "Copying config to $nginxConfigDir."
     cp -fv config/nginx.conf $nginxConfigDir
     cp -fv config/default $nginxConfigDir/sites-available 
+}
+
+function edit_config
+{
+    echo "Editing config files in $nginxConfigDir with correct WWWroot."
+    sed -i "s/##WWWROOT##/$wwwroot/g" $nginxConfigDir/sites-available/default
+    sed -i "s/##BBC1ROOT##/$bbc1root/g" $nginxConfigDir/nginx.conf 
 }
 
 function check_nginx_install
@@ -140,8 +130,8 @@ else
     echo "Skipping port check."
 fi
 check_nginx_install
-edit_config
 copy_config
+edit_config
 create_dirs
 copy_html
 restart_nginx
