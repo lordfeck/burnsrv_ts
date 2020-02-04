@@ -1,12 +1,27 @@
 #!/bin/bash
 
-# APRROXIMATE MEMORIES SETUP SCRIPT
-# V1.1 04-12-2019
+# APRROXIMATE MEMORIES COMBINED SETUP SCRIPT
+# V2.0 04-12-2019
 # Author: MJB
 
-. setup.config
+mode="dev"
+doPortCheck="y"
 
-readonly banner="setup.sh: Use -w to copy just WWW\nUse -c to copy just config.\nRun with no flags to perform a full install.\n-p Skip port check."
+readonly banner="USAGE: setup.sh [args]\nRun with no flags to perform a full dev mode install. Requires root privileges.
+ARGS:\n-h print this message.\n-w copy WWW only, no root required.
+-c copy config only.\n-p Skip port check if you already have nginx installed.\n-l perform live install (for production env only)."
+
+function set_live
+{
+    mode="live"
+    userName="$liveUserName"
+    rootDir="$liveRootDir"
+    vidDir="$liveVidDir"
+    htmlDir="$liveHtmlDir"
+    # Used in sed
+    wwwroot="$liveWwwRoot"
+    bbc1root="$liveBbc1root"
+}
 
 function check_ports
 {
@@ -22,6 +37,8 @@ function check_ports
 
 function check_os
 {
+    opsys=$(lsb_release -is)
+    echo "Detected OS: ${opsys}"
     if [ "$opsys" = "Ubuntu" ]; then
         echo "Using APT and DPKG for Ubuntu."
         packager="apt-get -qy install"
@@ -91,40 +108,43 @@ function restart_nginx
     systemctl restart nginx
 }
 
-echo "Beginning Burnsrv Setup..."
-
-# Check environment
-
-opsys=$(lsb_release -is)
-
-echo "Detected OS: ${opsys}"
-
-# We can copy HTML without root
-if [ "$1" = "-w" ]; then
-    copy_html
-    exit 0
-elif [ "$1" = "-h" ]; then
-    echo -e $banner
-    exit 0
-fi
-
-# Other ops need root/sudo
-if [ $(id -u) -ne "0" ]; then
-    echo "Please run as root or sudo."
-    exit 1
-fi
-
-# We might want to just copy config
-if [ "$1" = "-c" ]; then
-    edit_config
-    copy_config
-    restart_nginx
-    exit 0
-fi
+function check_privileges
+{
+    if [ $(id -u) -ne "0" ]; then
+        echo "Please run as root or sudo."
+        exit 1
+    fi
+}
 
 # Begin main body of script
+
+if [ ! -s "setup.config" ]; then
+    echo "Setup.config file missing or empty, cannot continue."
+    exit 1
+fi
+. setup.config
+
+while getopts ":lwcp" opt; do
+    case $opt in
+        "h" ) echo -e "$banner"; exit 0 ;;
+        "l" ) set_live ;;
+        "w" ) copy_html; exit 0 ;;
+        "c" ) check_privileges 
+              edit_config
+              copy_config
+              restart_nginx
+              exit 0 ;;
+        "p" ) doPortCheck="y" ;;
+        "*" ) echo -e "Invalid Args.\n$banner"; exit 1 ;;
+    esac
+done
+
+# Now run with configured options
+echo "Beginning Burnsrv $mode Setup..."
+
+check_privileges
 check_os
-if [ "$1" != "-p" ]; then
+if [ "$doPortCheck" = "y" ]; then
     check_ports
 else
     echo "Skipping port check."

@@ -4,18 +4,7 @@
 # V1.2-short 06-12-2019
 # Author: MJB Authored: 04-12-19
 
-##### EDIT BETWEEN THESE LINES TO HAVE MATCHING PATHS ####
-readonly rootDir="/local/mbrown49/burnsrv"
-readonly vidDir="/local/mbrown49/burnsrv/bbc1/"
-readonly htmlDir="/local/mbrown49/burnsrv/www/"
-# These need pathnames escaped for SED.
-readonly bbc1root='\/local\/mbrown49\/burnsrv\/bbc1'
-readonly wwwroot='\/local\/mbrown49\/burnsrv\/www'
-readonly userName="mbrown49"
-##########################################################
-
-readonly nginxConfigDir="/etc/nginx/"
-readonly rtmpEnabled="/etc/nginx/modules-enabled/50-mod-stream.conf"
+. setup.config
 
 readonly banner="setup2.sh: Use -w to copy just WWW\nUse -c to copy just config.\nRun with no flags to perform a full install."
 
