@@ -6,10 +6,21 @@
 
 mode="dev"
 doPortCheck="y"
+nginxIsInstalled="idk_yet"
 
 readonly banner="USAGE: setup.sh [args]\nRun with no flags to perform a full dev mode install. Requires root privileges.
 ARGS:\n-h print this message.\n-w copy WWW only, no root required.
 -c copy config only.\n-p Skip port check if you already have nginx installed.\n-l perform live install (for production env only)."
+
+# function currently not in use, live mode only.
+function install_rtmp
+{
+    echo "Installing ARM-compiled rtmp module."
+    cp -rfv modrtmp-arm/ngx_rtmp_module.so /usr/lib/nginx/modules/ngx_rtmp_module.so
+    cp -rfv modrtmp-arm/mod-stream.conf /usr/lib/nginx/modules/modules-available/mod-stream.conf
+    touch $rtmpEnabled
+    ln -sv /usr/share/nginx/modules-available/mod-stream.conf $rtmpEnabled
+}
 
 function set_live
 {
@@ -90,8 +101,7 @@ function check_nginx_install
 {
     if ! 2>&1 $query nginx fcgiwrap libnginx-mod-rtmp >/dev/null; then
         echo "NGINX and/or rtmp, fcgiwrap modules not installed!"
-        echo "Installing..."
-        install_nginx
+        nginxIsInstalled="no"
     else
         echo "Nginx, fcgiwrap and libnginx-mod-rtmp installed. Continuing..."
     fi
@@ -99,6 +109,7 @@ function check_nginx_install
 
 function install_nginx
 {
+    echo "Installing nginx and all dependencies..."
     2>&1 $packager nginx libnginx-mod-rtmp fcgiwrap >/dev/null
 }
 
@@ -124,18 +135,18 @@ if [ ! -s "setup.config" ]; then
 fi
 . setup.config
 
-while getopts ":lwcp" opt; do
+while getopts ":hlwcp" opt; do
     case $opt in
         "h" ) echo -e "$banner"; exit 0 ;;
         "l" ) set_live ;;
         "w" ) copy_html; exit 0 ;;
         "c" ) check_privileges 
-              edit_config
               copy_config
+              edit_config
               restart_nginx
               exit 0 ;;
-        "p" ) doPortCheck="y" ;;
-        "*" ) echo -e "Invalid Args.\n$banner"; exit 1 ;;
+        "p" ) doPortCheck="n" ;;
+        * ) echo -e "Invalid Args.\n$banner"; exit 1 ;;
     esac
 done
 
@@ -150,6 +161,11 @@ else
     echo "Skipping port check."
 fi
 check_nginx_install
+echo "Note: Nginx auto install disabled for live. (This is $mode)."
+if [ "$nginxIsInstalled" = "no" ] && [ "$mode" = "dev" ]; then
+    install_nginx
+    #install_rtmp
+fi
 copy_config
 edit_config
 create_dirs
