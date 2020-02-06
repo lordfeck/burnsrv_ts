@@ -11,3 +11,4 @@ typedef unsigned long int absoluteUint;
 #define WRITE_OUT 2
 #define GENERATE_ONLY 3
 
+#define FFIMG_JPG "ffout.jpg"
