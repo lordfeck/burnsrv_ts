@@ -22,9 +22,6 @@ debug: $(TEST_EXEC).c $(CMP_EXEC).c ffcnv.c $(LIBRARY)
 	$(CC) -DDEBUG fflib.c $(TEST_EXEC).c -o $(TEST_EXEC) -lm
 	$(CC) -DDEBUG fflib.c $(CMP_EXEC).c -o $(CMP_EXEC) -lm
 
-ffi: ffi.c
-	$(CC) ffi.c -o ffi
-
 run: $(TEST_EXEC)
 	./$(TEST_EXEC)
 
