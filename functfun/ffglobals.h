@@ -12,3 +12,6 @@ typedef unsigned long int absoluteUint;
 #define GENERATE_ONLY 3
 
 #define FFIMG_JPG "ffout.jpg"
+
+// Buffer for reading in images in bytes (20MB)
+#define READIN_BUFFER 20000000

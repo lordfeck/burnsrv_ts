@@ -17,7 +17,7 @@ int main(int argc, char** argv){
     char *inFileName = NULL;
     FILE *inFile = NULL;
     FILE *outFile = NULL;
-    size_t bytes;
+    size_t bytes, outBytes;
 
     if (argc <2){
         puts("Need infile.");
@@ -34,18 +34,18 @@ int main(int argc, char** argv){
         fprintf(stderr, "Couldn't open %s. Sorry.\n", inFileName);
         return 1;
     }
-    // FOR NOW readin 20k, we'll need to adjust for larger files.
-    // cmp tells us that it wrote 20000 bytes exactly
-    buffer = malloc(20000*sizeof(char));
-    bytes=fread(buffer, 1, 20000*sizeof(char), inFile);
+    // FOR NOW readin 20MB, we'll need to adjust for larger files.
+    // See what 'cmp' outputs
+    buffer = malloc(READIN_BUFFER*sizeof(char));
+    bytes=fread(buffer, 1, READIN_BUFFER*sizeof(char), inFile);
     fprintf(stdout,"Read in %u bytes.\n", (unsigned int) bytes);
 
     if (!outFile){
         fprintf(stderr, "Couldn't open %s for writing. Sorry.\n", FFIMG_JPG);
         return 1;
     }
-    bytes=fwrite(buffer, 1, 20000*sizeof(char), outFile); 
-    fprintf(stdout,"Wrote out %u bytes to %s.\n", (unsigned int) bytes, FFIMG_JPG);
+    outBytes=fwrite(buffer, 1, bytes*sizeof(char), outFile); 
+    fprintf(stdout,"Wrote out %u bytes to %s.\n", (unsigned int) outBytes, FFIMG_JPG);
 
     free(buffer);
     fclose(inFile);
