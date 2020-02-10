@@ -18,13 +18,13 @@ ffcnv: ffcnv.c $(LIBRARY)
 	$(CC) fflib.c ffcnv.c -o ffcnv
 
 ffimg: ffimg.c $(LIBRARY)
-	$(CC) fflib.c ffimg.c -o ffimg -lgd -ljpeg -lm
+	$(CC) fflib.c ffimg.c -o ffimg 
 
 debug: $(TEST_EXEC).c $(CMP_EXEC).c ffcnv.c $(LIBRARY) ffimg.c
 	$(CC) -DDEBUG fflib.c ffcnv.c -o ffcnv
 	$(CC) -DDEBUG fflib.c $(TEST_EXEC).c -o $(TEST_EXEC) -lm
 	$(CC) -DDEBUG fflib.c $(CMP_EXEC).c -o $(CMP_EXEC) -lm
-	$(CC) -DDEBUG fflib.c ffimg.c -o ffimg -lgd -ljpeg -lm
+	$(CC) -DDEBUG fflib.c ffimg.c -o ffimg 
 
 run: $(TEST_EXEC)
 	./$(TEST_EXEC)

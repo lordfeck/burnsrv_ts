@@ -6,30 +6,35 @@
 /*****************************************************************************/
 #include<stdio.h>
 #include<unistd.h>
-#include"gd.h"
+#include<stdlib.h>
 
 #include"ffglobals.h"
 #include"fflib.h"
 
 int main(int argc, char** argv){
-    gdImagePtr im;
+    char *banner="ffimg: Hold image in memory, dump at regular intervals.\n\
+Usage:\n\
+./ffimg <inputFileName> <outputFileName> <time (s)> <intervals>";
+
     char *buffer = NULL; 
     char *inFileName = NULL;
+    char *outFileName = NULL;
     FILE *inFile = NULL;
     FILE *outFile = NULL;
     size_t bytes, outBytes;
 
-    if (argc <2){
-        puts("Need infile.");
+    if (argc <3){
+        fprintf(stderr, "%s\n", banner);
         return 1;
     }
 
     inFileName = argv[1];
+    outFileName = argv[2];
 
-    printf("Input file is:%s\n", inFileName);
+    printf("Input file is:%s, Output file is:%s\n", inFileName, outFileName);
 
     inFile = fopen(inFileName, "rb");
-    outFile = fopen(FFIMG_JPG, "wb");
+    outFile = fopen(outFileName, "wb");
     if (!inFile){
         fprintf(stderr, "Couldn't open %s. Sorry.\n", inFileName);
         return 1;
@@ -41,11 +46,11 @@ int main(int argc, char** argv){
     fprintf(stdout,"Read in %u bytes.\n", (unsigned int) bytes);
 
     if (!outFile){
-        fprintf(stderr, "Couldn't open %s for writing. Sorry.\n", FFIMG_JPG);
+        fprintf(stderr, "Couldn't open %s for writing. Sorry.\n", outFileName);
         return 1;
     }
     outBytes=fwrite(buffer, 1, bytes*sizeof(char), outFile); 
-    fprintf(stdout,"Wrote out %u bytes to %s.\n", (unsigned int) outBytes, FFIMG_JPG);
+    fprintf(stdout,"Wrote out %u bytes to %s.\n", (unsigned int) outBytes, outFileName);
 
     free(buffer);
     fclose(inFile);
