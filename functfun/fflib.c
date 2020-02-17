@@ -4,8 +4,11 @@
 #include<stdio.h> // file and console IO
 #include<stdlib.h> // malloc etc
 #include<unistd.h> // for sleep()
-
+#include<string.h> // for strcat, strtok etc
 #include"fflib.h"
+
+// non-public function
+char *generateImgFileName(const char *fileName, int fileNumber);
 
 int readInBin(const char *fileName, float **logTable, int *upperBound){
     FILE *binFile=fopen(fileName, "rb");
@@ -113,8 +116,7 @@ int readInTxt(const char *fileName, float **logTable, int *upperBound){
 int dumpImgAtIntervals(imgFile workingImage, int interval, int maxTime){
    int fileNumber=1;
    for (int i=0; i<maxTime; i+=interval){
-        //FIXME needs to be outFileName(i).jpg
-        dumpImgToFile(workingImage, workingImage.outFileName);
+        dumpImgToFile(workingImage, generateImgFileName(workingImage.outFileName, fileNumber));
         sleep(interval);
         fileNumber++;
     } 
@@ -131,4 +133,31 @@ int dumpImgToFile(imgFile workingImage, const char *fileName){
     fprintf(stdout,"Wrote out %u bytes to %s.\n", (unsigned int) outBytes, fileName);
     fclose(outFile);
     return 0;
+}
+
+char *generateImgFileName(const char *fileName, int fileNumber){
+    char *fileNameBuf=malloc(sizeof(char)*FILEBUFSIZE);
+    char fileNameWrk[FILEBUFSIZE];
+    char *token;
+    
+    // strtok modifies the filename string so we'll copy it to a buffer
+    strcpy(fileNameWrk, fileName);
+
+    // imagine this section in Java or C++
+    token = strtok(fileNameWrk, ".");
+    sprintf(fileNameBuf, "%s%d.", token, fileNumber);
+    token = strtok(NULL, ".");
+    strcat(fileNameBuf, token);
+
+    // check that filename was valid
+    token = strtok(NULL, ".");
+    if (token != NULL){
+        fprintf(stderr, "Possible malformation in filename %s. Please ensure there is only one period for the file extension.\n", fileName);
+    }
+
+    #ifdef DEBUG
+    printf("Generated filename from:%s to:%s\n", fileName, fileNameBuf);
+    #endif
+
+    return fileNameBuf;
 }

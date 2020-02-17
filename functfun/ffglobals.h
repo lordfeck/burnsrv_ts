@@ -25,4 +25,7 @@ typedef struct imgFile {
 // Buffer for reading in images in bytes (20MB)
 #define READIN_BUFFER 20000000
 
+// fflib.c
+#define FILEBUFSIZE 100 // buffer for filenames
+
 #endif
