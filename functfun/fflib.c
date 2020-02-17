@@ -111,7 +111,13 @@ int readInTxt(const char *fileName, float **logTable, int *upperBound){
 }
 
 int dumpImgAtIntervals(imgFile workingImage, int interval, int maxTime){
-    
+   int fileNumber=1;
+   for (int i=0; i<maxTime; i+=interval){
+        //FIXME needs to be outFileName(i).jpg
+        dumpImgToFile(workingImage, workingImage.outFileName);
+        sleep(interval);
+        fileNumber++;
+    } 
 }
 
 int dumpImgToFile(imgFile workingImage, const char *fileName){
