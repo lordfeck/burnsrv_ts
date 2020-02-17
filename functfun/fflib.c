@@ -115,11 +115,14 @@ int readInTxt(const char *fileName, float **logTable, int *upperBound){
 
 int dumpImgAtIntervals(imgFile workingImage, int interval, int maxTime){
    int fileNumber=1;
+   char *outFileName;
    for (int i=0; i<maxTime; i+=interval){
-        dumpImgToFile(workingImage, generateImgFileName(workingImage.outFileName, fileNumber));
+        outFileName=generateImgFileName(workingImage.outFileName, fileNumber);
+        dumpImgToFile(workingImage, outFileName);
         sleep(interval);
         fileNumber++;
-    } 
+    }
+    free(outFileName);
 }
 
 int dumpImgToFile(imgFile workingImage, const char *fileName){
@@ -136,7 +139,7 @@ int dumpImgToFile(imgFile workingImage, const char *fileName){
 }
 
 char *generateImgFileName(const char *fileName, int fileNumber){
-    char *fileNameBuf=malloc(sizeof(char)*FILEBUFSIZE);
+    char *fileNameBuf=malloc(sizeof(char)*FILEBUFSIZE); // freed in calling function
     char fileNameWrk[FILEBUFSIZE];
     char *token;
     
