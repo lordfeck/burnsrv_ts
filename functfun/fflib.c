@@ -5,7 +5,6 @@
 #include<stdlib.h> // malloc etc
 #include<unistd.h> // for sleep()
 
-#include"ffglobals.h"
 #include"fflib.h"
 
 int readInBin(const char *fileName, float **logTable, int *upperBound){
@@ -111,10 +110,19 @@ int readInTxt(const char *fileName, float **logTable, int *upperBound){
     return 0;
 }
 
-int dumpImgAtIntervals(const char *imgPtr, const char *fileName, int interval, int maxTime){
+int dumpImgAtIntervals(imgFile workingImage, int interval, int maxTime){
     
 }
 
-int dumpImgToFile(const char *imgPtr, const char *fileName){
+int dumpImgToFile(imgFile workingImage, const char *fileName){
+    size_t outBytes;
     FILE *outFile=fopen(fileName, "wb");
+    if (!outFile){
+        fprintf(stderr, "%s couldn't be opened for writing.\n", fileName);
+        return 1;
+    }
+    outBytes=fwrite(workingImage.imgPtr, 1, workingImage.fsize*sizeof(char), outFile); 
+    fprintf(stdout,"Wrote out %u bytes to %s.\n", (unsigned int) outBytes, fileName);
+    fclose(outFile);
+    return 0;
 }

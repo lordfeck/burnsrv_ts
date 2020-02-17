@@ -18,8 +18,7 @@ Usage:\n\
     char *inFileName = NULL;
     char *outFileName = NULL;
     FILE *inFile = NULL;
-    FILE *outFile = NULL;
-    size_t bytes, outBytes;
+    size_t bytes;
 
     imgFile workingImage;
 
@@ -34,7 +33,6 @@ Usage:\n\
     printf("Input file is:%s, Output file is:%s\n", inFileName, outFileName);
 
     inFile = fopen(inFileName, "rb");
-    outFile = fopen(outFileName, "wb");
     if (!inFile){
         fprintf(stderr, "Couldn't open %s. Sorry.\n", inFileName);
         return 1;
@@ -45,25 +43,15 @@ Usage:\n\
     bytes=fread(buffer, 1, READIN_BUFFER*sizeof(char), inFile);
     fprintf(stdout,"Read in %u bytes.\n", (unsigned int) bytes);
 
-    if (!outFile){
-        fprintf(stderr, "Couldn't open %s for writing. Sorry.\n", outFileName);
-        return 1;
-    }
-    outBytes=fwrite(buffer, 1, bytes*sizeof(char), outFile); 
-    fprintf(stdout,"Wrote out %u bytes to %s.\n", (unsigned int) outBytes, outFileName);
-
     // test of struct (just assign pointer, don't need to copy memory)
     
     workingImage.fsize=bytes;    
     workingImage.imgPtr=buffer;
-    
-    FILE *imgNAME = fopen("outTEST.jpg", "wb");
+    workingImage.outFileName=outFileName;
 
-    outBytes=fwrite(workingImage.imgPtr, 1, workingImage.fsize*sizeof(char), imgNAME); 
-    fprintf(stdout,"Wrote out %u bytes to %s.\n", (unsigned int) outBytes, outFileName);
+    dumpImgToFile(workingImage, workingImage.outFileName);
 
     free(buffer);
     fclose(inFile);
-    fclose(outFile);
     return 0;
 }

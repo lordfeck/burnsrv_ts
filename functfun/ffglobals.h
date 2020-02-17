@@ -1,4 +1,7 @@
 /* Global header for typedefs */
+#ifndef FFGLOBALS_H
+#define FFGLOBALS_H
+
 /* Pack it in a struct, this MIGHT make it easier */
 typedef struct imgFile {
     size_t fsize;
@@ -21,3 +24,5 @@ typedef struct imgFile {
 
 // Buffer for reading in images in bytes (20MB)
 #define READIN_BUFFER 20000000
+
+#endif
