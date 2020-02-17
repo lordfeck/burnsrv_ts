@@ -1,8 +1,9 @@
 /*Funfunct common functions library*/
 /*Authored: 22/01/2020 */
 /*Author: MJB */
-#include<stdio.h>
-#include<stdlib.h>
+#include<stdio.h> // file and console IO
+#include<stdlib.h> // malloc etc
+#include<unistd.h> // for sleep()
 
 #include"ffglobals.h"
 #include"fflib.h"
@@ -108,4 +109,12 @@ int readInTxt(const char *fileName, float **logTable, int *upperBound){
     #endif
     fclose(logFile);
     return 0;
+}
+
+int dumpImgAtIntervals(const char *imgPtr, const char *fileName, int interval, int maxTime){
+    
+}
+
+int dumpImgToFile(const char *imgPtr, const char *fileName){
+    FILE *outFile=fopen(fileName, "wb");
 }

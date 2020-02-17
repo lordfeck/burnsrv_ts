@@ -1,5 +1,11 @@
-/* global header for typedefs */
-typedef unsigned long int absoluteUint; 
+/* Global header for typedefs */
+/* Pack it in a struct, this MIGHT make it easier */
+typedef struct imgFile {
+    size_t fsize;
+    char *outFileName;
+    // here char is used to store a byte, NOT a string!
+    char *imgPtr;
+} imgFile;
 
 // fftest.c
 #define FFTEST_HEADER_V1 "|FFTEST_LOGARITHMS|FORMAT_V1|upperBound:%d|\n"

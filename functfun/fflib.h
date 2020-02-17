@@ -10,3 +10,6 @@ int writeOutBin(const char *fileName, const float* logTable, int upperBound);
 int readInTxt(const char *fileName, float **logTable, int *upperBound);
 int writeOutTxt(const char *fileName, const float* logTable, int upperBound);
 
+// Image Utility Functions
+int dumpImgAtIntervals(const char *imgPtr, const char *fileName, int interval, int maxTime);
+int dumpImgToFile(const char *imgPtr, const char *fileName);
