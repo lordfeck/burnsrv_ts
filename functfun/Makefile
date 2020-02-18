@@ -3,7 +3,7 @@ TEST_EXEC = fftest
 CMP_EXEC = ffcmp
 LIBRARY = fflib.c fflib.h
 
-.PHONY: clean run debug all cleanbin
+.PHONY: clean run debug all cleanbin tidy
 
 # Need to call GCC with -lm to link math library defined in math.h
 all: fftest ffcmp ffcnv ffimg
@@ -30,4 +30,8 @@ run: $(TEST_EXEC)
 	./$(TEST_EXEC)
 
 clean:
-	@rm -vf $(TEST_EXEC) $(CMP_EXEC) ffi ffcnv ffimg *.o *.bin *.jpg
+	@rm -vf $(TEST_EXEC) $(CMP_EXEC) ffi ffcnv ffimg *.o 
+
+tidy:
+	@echo 'Tidying up stray binfiles and textfiles.'
+	rm -vf *.txt *.bin

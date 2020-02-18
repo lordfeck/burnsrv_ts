@@ -31,10 +31,15 @@ int readInBin(const char *fileName, float **logTable, int *upperBound){
     #ifdef DEBUG
     if (logTable){
         puts("Logtable Allocation Successful. Beginning ReadIn...");
+    } else {
+        fprintf(stderr, "Problem encountered allocating log table.\n");
     }
     #endif
     // read in table
     fread((*logTable), sizeof(float), *upperBound, binFile);
+    if(ferror(binFile)){
+        fprintf(stderr, "Problem encountered reading in log table.\n");
+    }
 
     fclose(binFile);
     return 0;

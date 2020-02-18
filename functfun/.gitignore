@@ -3,3 +3,5 @@ ffcmp
 fftest
 ffcnv
 ffimg
+*.jpg
+*.txt

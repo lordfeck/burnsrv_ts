@@ -5,6 +5,8 @@
 #include "ffglobals.h" // for typedef
 
 // Binary Mode Functions
+/* ReadIn Bin: Will read in and allocate the logtable pointed from logTable. */
+/* I.E. this function modifies the float ** logtable and int *upperBound */
 int readInBin(const char *fileName, float **logTable, int *upperBound);
 int writeOutBin(const char *fileName, const float* logTable, int upperBound);
 
