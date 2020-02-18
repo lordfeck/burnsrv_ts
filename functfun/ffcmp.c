@@ -122,7 +122,7 @@ int compareFloats(int fcount, int argc, char** argv){
     int avgBaseError=0;
     float avgBaseFraction=0.0;
     // compare each table against its neighbour
-    int adjacentDiffs[fcount];
+    int adjacentDiffs[fcount-1];
     int avgAdjError=0;
 
     // cycle through the non-getopts arguments, they are files to be read in
@@ -164,7 +164,21 @@ int compareFloats(int fcount, int argc, char** argv){
     printf("Average base difference: %d\n", avgBaseError);
     printf("Average error percentage: %5.2f\n", avgBaseFraction*100.0);
 
-    puts("TODO: Adjacent difference.");
+    // calculate adjacent differences: i.e. the diff for each file and its neighbour
+    for(int i=1; i<fcount; i++){
+        adjacentDiffs[i]=calculateBaseDiff(logTables[i-1], logTables[i], upperBounds[0]);
+        printf("Adjacent difference between %s and %s: %d\n", argv[argOffset+i-1], argv[argOffset+i], adjacentDiffs[i]);
+    }
+
+    for(int i=0; i<fcount-1; i++){
+        avgAdjError+=adjacentDiffs[i];
+#ifdef DEBUG
+        printf("Iteration: %d AvgAdjError: %d \n", i, avgAdjError);
+#endif
+    }
+
+    avgAdjError/=fcount-1;
+    printf("Avgerage Adjacent Error: %d \n", avgAdjError);
 
     // housekeeping
     for (int i=0; i<fcount; i++) free(logTables[i]);
