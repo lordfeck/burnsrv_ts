@@ -139,7 +139,7 @@ int compareFloats(int fcount, int argc, char** argv){
         }
     }
     
-    // calculate error rate and percentage
+    // calculate error rate and percentage, also average
     printf("Base difference compared against %s.\n", argv[argOffset]);
 
     for (int i=1; i<fcount; i++){
@@ -148,32 +148,27 @@ int compareFloats(int fcount, int argc, char** argv){
         printf("Base difference for %s: %d \n", argv[argOffset+i], baseDiffs[i]);
         errorFraction=calculateErrorFraction(baseDiffs[i], upperBounds[0]);
         printf("Error Percentage for %s: %5.2f\n", argv[argOffset+i], errorFraction*100.0);
-    }
-
-    // calculate average base rate and error percentage (merge with above loop?)
-    for(int i=0; i<fcount; i++){
-        avgBaseError+=baseDiffs[i];
+        avgBaseError+=baseDiffs[i-1];
 #ifdef DEBUG
-        printf("Iteration: %d AvgBaseError: %d AvgBaseFraction: %f\n", i, avgBaseError, avgBaseFraction);
+        printf("Iteration: %d AvgBaseError: %d \n", i-1, avgBaseError);
 #endif
     }
-
+    // we've added everything except the last base diff so do that now
+    avgBaseError+=baseDiffs[fcount-1];
     avgBaseError=avgBaseError/fcount;
     avgBaseFraction=calculateErrorFraction(avgBaseError,upperBounds[0]);
 
-    printf("Average base difference: %d\n", avgBaseError);
+    printf("Average base difference: %d in %d\n", avgBaseError, upperBounds[0]);
     printf("Average error percentage: %5.2f\n", avgBaseFraction*100.0);
 
     // calculate adjacent differences: i.e. the diff for each file and its neighbour
     for(int i=1; i<fcount; i++){
         adjacentDiffs[i]=calculateBaseDiff(logTables[i-1], logTables[i], upperBounds[0]);
         printf("Adjacent difference between %s and %s: %d\n", argv[argOffset+i-1], argv[argOffset+i], adjacentDiffs[i]);
-    }
-
-    for(int i=0; i<fcount-1; i++){
-        avgAdjError+=adjacentDiffs[i];
+        // adjacent differences are one less than fcount so we don't need to add any more later; offset is always correct
+        avgAdjError+=adjacentDiffs[i-1];
 #ifdef DEBUG
-        printf("Iteration: %d AvgAdjError: %d \n", i, avgAdjError);
+        printf("Iteration: %d AvgAdjError: %d \n", i-1, avgAdjError);
 #endif
     }
 
