@@ -20,10 +20,7 @@ Modes:\n\
 -b use byte mode (for images and anything else)\n\
 -h show help and exit\n";
     
-    char *filename1, *filename2;
-    float *logTable1, *logTable2;
-    int upperBound1, upperBound2, upperBound;
-    int baseDiff, fcount;
+    int fcount;
     float errorFraction;
     int mode=-1;
 

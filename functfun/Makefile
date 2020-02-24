@@ -33,5 +33,5 @@ clean:
 	@rm -vf $(TEST_EXEC) $(CMP_EXEC) ffi ffcnv ffimg *.o 
 
 tidy:
-	@echo 'Tidying up stray binfiles and textfiles.'
-	rm -vf *.txt *.bin
+	@echo 'Tidying up stray binfiles, jpegfiles and textfiles.'
+	rm -vf *.txt *.bin *.jpg
