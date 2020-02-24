@@ -87,7 +87,7 @@ function copy_config
 {
     echo "Copying config to $nginxConfigDir."
     cp -fv config/nginx.conf $nginxConfigDir
-    cp -fv config/default $nginxConfigDir/sites-available 
+    cp -fv config/default $nginxConfigDir/sites-available/
 }
 
 function edit_config
@@ -161,8 +161,7 @@ else
     echo "Skipping port check."
 fi
 check_nginx_install
-echo "Note: Nginx auto install disabled for live. (This is $mode)."
-if [ "$nginxIsInstalled" = "no" ] && [ "$mode" = "dev" ]; then
+if [ "$nginxIsInstalled" = "no" ]; then
     install_nginx
     #install_rtmp
 fi
