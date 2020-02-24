@@ -17,4 +17,4 @@ int writeOutTxt(const char *fileName, const float* logTable, int upperBound);
 // Image Utility Functions
 int dumpImgAtIntervals(imgFile workingImage, int interval, int maxTime);
 int dumpImgToFile(imgFile workingImage, const char *fileName);
-
+size_t readInImg(const char *fileName, char **buffer);

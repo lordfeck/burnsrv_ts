@@ -118,6 +118,24 @@ int readInTxt(const char *fileName, float **logTable, int *upperBound){
     return 0;
 }
 
+// read in image file to buffer (edits arg in pointer)
+size_t readInImg(const char *fileName, char **buffer){
+    size_t bytes;
+    FILE *imgFile=fopen(fileName, "rb");
+
+    if (!imgFile){
+        fprintf(stderr, "Couldn't open %s for reading. Sorry.\n", fileName);
+        return 1;
+    }
+
+    buffer = malloc(READIN_BUFFER*sizeof(char));
+    bytes=fread(buffer, 1, READIN_BUFFER*sizeof(char), imgFile);
+    fprintf(stdout,"Read in %u bytes.\n", (unsigned int) bytes);
+
+    fclose(imgFile);
+    return bytes;
+}
+
 int dumpImgAtIntervals(imgFile workingImage, int interval, int maxTime){
    int fileNumber=1;
    char *outFileName;

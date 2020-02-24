@@ -48,16 +48,17 @@ Usage:\n\
 
     printf("Input file is:%s, Output file is:%s\n", inFileName, outFileName);
 
+    // TODO: replace with fflib's read in img if it works
     inFile = fopen(inFileName, "rb");
     if (!inFile){
         fprintf(stderr, "Couldn't open %s. Sorry.\n", inFileName);
         return 1;
     }
-    // FOR NOW readin 20MB, we'll need to adjust for larger files.
-    // See what 'cmp' outputs
+
     buffer = malloc(READIN_BUFFER*sizeof(char));
     bytes=fread(buffer, 1, READIN_BUFFER*sizeof(char), inFile);
     fprintf(stdout,"Read in %u bytes.\n", (unsigned int) bytes);
+    // end TODO
 
     // test of struct (just assign pointer, don't need to copy memory)
     
@@ -65,7 +66,6 @@ Usage:\n\
     workingImage.imgPtr=buffer;
     workingImage.outFileName=outFileName;
 
-//    dumpImgToFile(workingImage, workingImage.outFileName);
     dumpImgAtIntervals(workingImage, interval, maxTime);
     free(buffer);
     fclose(inFile);
