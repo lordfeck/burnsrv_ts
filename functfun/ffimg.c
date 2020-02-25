@@ -7,7 +7,7 @@
 #include<stdlib.h>
 
 #include"ffglobals.h" // READIN_BUFFER, imgFile typedef
-#include"fflib.h"
+#include"fflib.h"  // readInImg
 
 int main(int argc, char** argv){
     char *banner="ffimg: Hold image in memory, dump at regular intervals.\n\
@@ -49,6 +49,7 @@ Usage:\n\
     printf("Input file is:%s, Output file is:%s\n", inFileName, outFileName);
 
     // TODO: replace with fflib's read in img if it works
+    
     inFile = fopen(inFileName, "rb");
     if (!inFile){
         fprintf(stderr, "Couldn't open %s. Sorry.\n", inFileName);
@@ -58,7 +59,9 @@ Usage:\n\
     buffer = malloc(READIN_BUFFER*sizeof(char));
     bytes=fread(buffer, 1, READIN_BUFFER*sizeof(char), inFile);
     fprintf(stdout,"Read in %u bytes.\n", (unsigned int) bytes);
-    // end TODO
+    
+    //fffff end TODO
+  //  bytes = readInImg(inFileName, buffer);
 
     // test of struct (just assign pointer, don't need to copy memory)
     
