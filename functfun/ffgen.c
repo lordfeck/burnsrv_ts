@@ -1,10 +1,9 @@
 /*****************************************************************************/
 /* CSC3002 APPROXIMEM MJB 03/11/2019 */
-/* Funct Fun Test */
+/* Funct Fun Gen */
 /* Generate a large log table: */
 /* Dump it in a text file or put it in RAM as you desire.*/
 /*****************************************************************************/
-
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
@@ -12,11 +11,11 @@
 
 #include"ffglobals.h"
 #include"fflib.h"
-#include"fftest.h"
+#include"gen.h"
 
 int main(int argc, char** argv){
     char *logo="   ________          __\n  / _/ _/ /____ ___ / /_\n / _/ _/ __/ -_|_-</ __/\n/_//_/ \\__/\\__/___/\\__/\n";
-    char *banner=" FFTEST: Fun Function Tests. Flood thy RAM for fun! \n=====================================================\n\
+    char *banner=" FFTEST: Fun Function Generator. Flood thy RAM for fun! \n=====================================================\n\
  Usage: fftest [options]\n\
  -n Use biNary mode for reading and writing.\n\
  -r <filename> Read in previously-generated logartithm file\n\
