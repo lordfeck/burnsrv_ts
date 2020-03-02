@@ -3,6 +3,7 @@
 /* Funct Fun Test */
 /* Generate a large log table: */
 /* Dump it in a text file or put it in RAM as you desire.*/
+/* The previous functions of this file are handeled by ffgen.c */
 /*****************************************************************************/
 
 #include<stdio.h>
@@ -13,6 +14,87 @@
 #include"ffglobals.h"
 #include"fflib.h"
 #include"fftest.h"
+
+/** BEGIN IMG SRC for MERGE ***/
+
+
+/*****************************************************************************/
+/* CSC3002 APPROXIMEM MJB 06/02/2020 */
+/* Funct Fun with Images */
+/*****************************************************************************/
+
+/*
+#include<stdio.h>
+#include<unistd.h>
+#include<stdlib.h>
+
+#include"ffglobals.h" // READIN_BUFFER, imgFile typedef
+#include"fflib.h"
+
+int main(int argc, char** argv){
+    char *banner="ffimg: Hold image in memory, dump at regular intervals.\n\
+Usage:\n\
+./ffimg <inputFileName> <outputFileName> <time (s)> <interval>";
+
+    char *buffer = NULL; 
+    char *inFileName = NULL;
+    char *outFileName = NULL;
+    FILE *inFile = NULL;
+    size_t bytes;
+    int maxTime, interval;
+
+    imgFile workingImage;
+
+    /* handle args */
+    if (argc <5){
+        fprintf(stderr, "%s\n", banner);
+        return 1;
+    }
+
+    inFileName = argv[1];
+    outFileName = argv[2];
+    maxTime = atoi(argv[3]);
+    interval = atoi(argv[4]);
+    
+    if (maxTime <= 0 || interval <=0){
+        puts("Interval or maxtime invalid.");
+        return 1;
+    }
+
+    if(interval > maxTime){
+        puts("Interval cannot be larger than time!");
+        return 1;
+    }
+
+    /* finish arg handling, begin execution */
+
+    printf("Input file is:%s, Output file is:%s\n", inFileName, outFileName);
+
+    // TODO: replace with fflib's read in img if it works
+    inFile = fopen(inFileName, "rb");
+    if (!inFile){
+        fprintf(stderr, "Couldn't open %s. Sorry.\n", inFileName);
+        return 1;
+    }
+
+    buffer = malloc(READIN_BUFFER*sizeof(char));
+    bytes=fread(buffer, 1, READIN_BUFFER*sizeof(char), inFile);
+    fprintf(stdout,"Read in %u bytes.\n", (unsigned int) bytes);
+    // end TODO
+
+    // test of struct (just assign pointer, don't need to copy memory)
+    
+    workingImage.fsize=bytes;    
+    workingImage.imgPtr=buffer;
+    workingImage.outFileName=outFileName;
+
+    dumpImgAtIntervals(workingImage, interval, maxTime);
+    free(buffer);
+    fclose(inFile);
+    return 0;
+}
+*/
+/** END IMG SRC FOR MERGE **/
 
 int main(int argc, char** argv){
     char *logo="   ________          __\n  / _/ _/ /____ ___ / /_\n / _/ _/ __/ -_|_-</ __/\n/_//_/ \\__/\\__/___/\\__/\n";
