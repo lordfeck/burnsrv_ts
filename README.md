@@ -58,4 +58,4 @@ Requires the BASH shell, nginx, ffmpeg and libnginx-mod-rtmp to run.
 Note: Currently being rewritten. 
 
 ## [abandoned] mathlib/
-An experimental maths library written in pure C. I planned to use it with functfun, but it wasn't necessary as C had its own built-in maths functions. However it wasn't a waste of time as it provided an oppertunity to refresh my programming skills.
+An experimental maths library written in pure C. I planned to use it with functfun, but it wasn't necessary as C had its own built-in maths functions. However it wasn't a waste of time as it provided an opportunity to refresh my programming skills.
