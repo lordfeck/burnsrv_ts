@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# APPROXIMATE MEMORIES CLIENT SCRIPT
-# Silent operation; pipes to dev/null
+# APPROXIMATE MEMORIES LOCAL CLIENT SCRIPT
+# Silencer attachment; pipes to /dev/null
 # Author: MJB Authored: 10-12-2019
 
 readonly maxCountPrint="10"

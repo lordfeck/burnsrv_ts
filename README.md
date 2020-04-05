@@ -10,25 +10,10 @@ Memories.
 * C
 * Make
 * Bash
-
-*More TBD.*
+* HTML
+* Perl
 
 # Repository Layout
-
-## [abandoned] mathlib/
-An experimental maths library written in pure C. Initially I thought to use it for
-functfun but later settled for math.h. However time wasn't wasted as it served an
-oppertunity to refresh my C knowledge.
-
-**Usage:** run `make` then `./mathtest`
-
-**Features**
-* Euler's Number
-* Natural Logs
-* Exponential Function
-
-See `mathops.h` for all implemented operations. Integer and double ops are
-supported.
 
 ## functfun/
 Short for 'Fun with Functions'. This can be configured to generate a log table
@@ -49,9 +34,13 @@ the testing procedures.
 * Read log table from disk
 * Log tables are allocated directly to heap memory
 
+## samples/
+
+Sample images and binfiles for funfunct.
+
 ## contrib/
 Any libraries that aren't authored by the maintainer. These however are
-necessary to build some of the source.
+necessary to build some of the source. Currently empty.
 
 ## util/
 Util contains all utility scripts that will assist us with running experiments
@@ -65,26 +54,8 @@ Also contains scripts to conduct the streaming and HTML sources.
 Requires the BASH shell, nginx, ffmpeg and libnginx-mod-rtmp to run.
 
 ### util/testcfg
-Configurable test suite scripts. Edit `testrun.config` to specify a test scenario.
-Then execute `runexpt.sh` and it will execute the experiment according to your 
-specification. Written in bash, intended for GNU/Linux.
 
-A possible application is to have this run the aforementioned `functfun`
-tool. We could also expand to include image, video, or any such other test.
-It is intended that all aspects of environmental preparation and log
-recording will be managed by these scripts.
+Note: Currently being rewritten. 
 
-**Requirements**
-
-Requires the ubiquitous BASH shell to be installed.
-
-**Usage** 
-
-Edit `testrun.config` to configure the test run.
-
-Run `./functfun.sh` to execute the test run.
-
-**Features**
-* Configurable test runs
-* May be extended to use any unix command-line utility
-* Will support logging in an understandable format
+## [abandoned] mathlib/
+An experimental maths library written in pure C. I planned to use it with functfun, but it wasn't necessary as C had its own built-in maths functions. However it wasn't a waste of time as it provided an oppertunity to refresh my programming skills.

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Start Stream script for Approximate Memories
+# Livestream script for Approximate Memories
 # Author: MJB Authored: 06-12-19
 
 . stream.config
