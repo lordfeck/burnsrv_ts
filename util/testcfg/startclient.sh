@@ -50,7 +50,7 @@ fi
 streamMode="$defaultMode"
 clientCount="$defaultClientCount"
 
-while getopts ":hlvns:" opt; do
+while getopts ":hlvn:s:" opt; do
     case $opt in
         l ) streamMode="live" ;;
         v ) streamMode="vod" ;;
