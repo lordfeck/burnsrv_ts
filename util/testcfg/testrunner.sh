@@ -10,6 +10,13 @@ fi
 
 . stream.config
 
+function checkError {
+if [ "$?" -ne "0" ]; then
+    echo "Critical error when $1. Exiting."
+    exit 1
+fi
+}
+
 # Output diagnostic info.
 echo "Welcome to testrunner. My tasks are as follows:"
 
@@ -34,7 +41,8 @@ fi
 # Sync time of all servers.
 echo "Running NTP sync operation for all hosts..."
 for server in "${streamServers[@]}"; do
-    ssh "${userName}@${server}" sudo ntpdate -q "$ntpHost"
+    ssh "${userName}@${server}" sudo ntpdate "$ntpHost"
+    checkError "ntpsyncing"
     sleep 1
     ssh "${userName}@${server}" sudo systemctl restart ntp
     sleep 1

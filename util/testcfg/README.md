@@ -12,7 +12,7 @@ Test Runner will also use the config file found in `../makempeg/`. This tells it
 
 * The user account specified in `stream.config` should have `sudo` permissions *without* the need for a password.
 
-* The interfaces on each server are specified in the classic Linux style. Namely: `eth0` opposed to `wlapshan3hj2h`. Also, the script uses `etho` as the capture interface for rtmp packets in tcpdump.
+* The interfaces on each server are specified in the classic Linux style. Namely: `eth0` opposed to `wlapshan3hj2h`. Also, the testrunner script uses `eth0` as the capture interface for rtmp packets in tcpdump.
 
 ## Usage:
 
@@ -22,10 +22,13 @@ Test Runner will also use the config file found in `../makempeg/`. This tells it
 
 Further help and options are informed by running `./testrunner.sh -h`.
 
-## Description of scripts:
+## Description of other scripts:
 
-### Greenwich.sh
+### greenwich.sh
 This script ensures that the times on two hosts are exact. Uses ntpd and cron to accomplish this.
 
 ### startclient.sh
 Use FFMPEG and stream a supplied rtmp stream to /dev/null. Used to create connections to a server.
+
+### livestream.sh
+Use FFMPEG to stream MP4 video files live to rtmp. This is the same as broadcasting from your home PC and using the server to relay towards many hosts. We haven't used this method for the experiment; rather the chosen vod method is implemented in `startclient.sh`.
