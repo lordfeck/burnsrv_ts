@@ -11,6 +11,7 @@ readonly banner="Start Client Stream. Usage:\n\
     -v stream using VOD\n\
     -s <stream path> supply stream url manually\n\
     -n <client count> for VOD\n\
+    -t <maxtime> Stream until then. Passed straight to FFMPEG -t.\n\
     Requires stream.config to be configured correctly.\n"
 
 function liveStream {
@@ -18,21 +19,19 @@ function liveStream {
 }
 
 function vodStream {
-    ffmpeg -loglevel error -y -i $stream -acodec copy -vcodec copy -f flv /dev/null
+    ffmpeg -loglevel error -y -i $stream -t $maxTime -acodec copy -vcodec copy -f flv /dev/null
 }
 
 function spawnStreams {
-#    if [ "$clientCount" -ge "$maxCountPrint" ]; then
-#        echo "Over $maxCountPrint clients spawned. Skipping some individual messages."
-#    fi
+    if [ "$clientCount" -eq "1" ]; then
+        echo "One client is required. Ignoring concurrent mode."
+        vodStream
+        return
+    fi
 
     while [ "0" -lt "$clientCount" ]; do
         vodStream &
         ((clientCount--))
-
-#        if [ "$clientCount" -le "$maxCountPrint" ]; then
-#            echo "SPAWNED $clientCount"
-#        fi
     done
 
     echo "Client spawn complete. Awaiting user interrupt."
@@ -50,7 +49,7 @@ fi
 streamMode="$defaultMode"
 clientCount="$defaultClientCount"
 
-while getopts ":hlvn:s:" opt; do
+while getopts ":hlvn:s:t:" opt; do
     case $opt in
         l ) streamMode="live" ;;
         v ) streamMode="vod" ;;
@@ -58,6 +57,7 @@ while getopts ":hlvn:s:" opt; do
         s ) echo "Stream supplied by argument. ";
             suppliedStream="$OPTARG" ;;
         h ) echo -e "$banner"; exit 0 ;;
+        t ) maxTime="$OPTARG" ;;
         \? ) echo -e "Invalid Argument.\n$banner"; exit 1 ;;
     esac
 done
