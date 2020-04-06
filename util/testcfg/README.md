@@ -25,7 +25,11 @@ Further help and options are informed by running `./testrunner.sh -h`.
 ## Description of other scripts:
 
 ### greenwich.sh
-This script ensures that the times on two hosts are exact. Uses ntpd and cron to accomplish this.
+This script ensures that the times on two hosts are exact. Uses crony (ntp daemon) and cron to accomplish this.
+
+* Call with "-s" just to sync. The testrunner does this.
+
+* Call with no args to sync times and compare the system clocks of all hosts specified in `stream.config`.
 
 ### startclient.sh
 Use FFMPEG and stream a supplied rtmp stream to /dev/null. Used to create connections to a server.

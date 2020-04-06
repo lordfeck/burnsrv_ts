@@ -39,15 +39,7 @@ if ! which tcpdump >/dev/null; then
 fi
 
 # Sync time of all servers.
-echo "Running NTP sync operation for all hosts..."
-for server in "${streamServers[@]}"; do
-    ssh "${userName}@${server}" sudo ntpdate "$ntpHost"
-    checkError "ntpsyncing"
-    sleep 1
-    ssh "${userName}@${server}" sudo systemctl restart ntp
-    sleep 1
-done
-echo "Time sync complete."
+./greenwich.sh -s
 
 # get start time
 startTime="$( date +'%M %S %N' )"

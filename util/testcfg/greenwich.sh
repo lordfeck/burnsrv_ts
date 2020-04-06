@@ -2,11 +2,17 @@
 
 # Greenwich: script to verify that two servers times are synced.
 # Author: MJB Authored: 05/04/2020
-# Requires NTP and Cron installed on all hosts.
+# Requires Chrony and Cron installed on all hosts.
 
 if [ ! -s "stream.config" ]; then
     echo "Error, need user profile and servers from stream.config."
     exit 1
+fi
+
+if [ "$1" = "-h" ]; then
+    echo "Greenwich server sync tool."
+    echo "Use -s just to sync servers. Run with no args to sync and compare times."
+    exit 0
 fi
 
 readonly timedir="greenwich_mean_times"
@@ -24,18 +30,24 @@ fi
 
 # Perform sync with the same ntp server.
 if [ "$skipSync" != "true" ]; then
-    echo "Running NTP sync operation for all hosts..."
+    echo "Running a triple NTP sync operation for all hosts..."
     for server in "${streamServers[@]}"; do
-        ssh "${userName}@${server}" sudo ntpdate "$ntpHost"
+        # FIXME: $ntpHost didn't play well with ssh, so we hard-coded it.
+        ssh "${userName}@${server}" "sudo chronyd -q 'server 0.uk.pool.ntp.org iburst'"
         sleep 1
-        ssh "${userName}@${server}" sudo systemctl restart ntp
+        ssh "${userName}@${server}" "sudo chronyd -q 'server 0.uk.pool.ntp.org iburst'"
+        sleep 1
+        ssh "${userName}@${server}" "sudo chronyd -q 'server 0.uk.pool.ntp.org iburst'"
         sleep 1
     done
     if [ "$doLocal" = "true" ]; then
-        sudo ntpdate -q "$ntpHost"
-        sudo systemctl restart ntp
+        sudo chronyd -q "server $ntpHost iburst"
     fi
     echo "Time sync complete."
+fi
+
+if [ "$1" = "-s" ]; then
+    exit 0
 fi
 
 # Set cron job to dump time in 1 minute.
