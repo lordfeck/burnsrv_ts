@@ -75,7 +75,7 @@ for server in "${streamServers[@]}"; do
     ssh "${userName}@${server}" 'sudo kill -2 `pgrep tcpdump`'
     sudo kill -2 `pgrep tcpdump`
     # remove any output from local tcpd run (uncomment to debug)
-    rm -vf "tcpderror.log"
+    #rm -vf "tcpderror.log"
 done
 
 # END MAIN
