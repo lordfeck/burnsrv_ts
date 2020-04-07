@@ -65,13 +65,17 @@ echo "Launching tcpdump and performing stream on each specified server."
 for server in "${streamServers[@]}"; do
     scp "starttcpdump.sh" "${userName}@${server}:/home/$userName/"
     sleep 1
-    ssh "${userName}@${server}" "/home/$userName/starttcpdump.sh eth0 $remotePcapFile"
+    ssh "${userName}@${server}" "/home/$userName/starttcpdump.sh eth0 $pcapFileName"
+    ./starttcpdump.sh "$localIface" "./$capDir/$server.local"
     echo "Beginning stream in 4..."
     sleep 4
     ./startclient.sh -v -n 1 -s "rtmp://${server}:${rtmpPort}/${rtmpPath}/${streamFiles[0]}.${streamFormat}" -t "$streamMaxLength"
-    echo "Stream over, killing remote tcpdump."
+    echo "Stream over, killing remote and local tcpdump."
     sleep 4
     ssh "${userName}@${server}" 'sudo kill -2 `pgrep tcpdump`'
+    sudo kill -2 `pgrep tcpdump`
+    # remove any output from local tcpd run (uncomment to debug)
+    rm -vf "tcpderror.log"
 done
 
 # END MAIN
@@ -80,9 +84,9 @@ done
 # Retrieve tcpdump captures & remove old captures 
 echo "Retriving and/or removing ($removeOldCap) old captures..."
 for server in "${streamServers[@]}"; do
-    scp "${userName}@${server}:/home/$userName/$remotePcapFile" "./$capDir/$server.remote"
+    scp "${userName}@${server}:/home/$userName/$pcapFileName" "./$capDir/$server.remote"
     if [ "$removeOldCap" = "true" ]; then
-        ssh "${userName}@${server}" rm "/home/$userName/$remotePcapFile"
+        ssh "${userName}@${server}" rm "/home/$userName/$pcapFileName"
     else
         echo "Old capture left on $server."
     fi
