@@ -63,12 +63,15 @@ startTime="$( date +'%M %S %N' )"
 # Run tcpdump locally and remotely. Start stream for one client (TODO: expand if necessary)
 echo "Launching tcpdump and performing stream on each specified server."
 for server in "${streamServers[@]}"; do
-    ssh "${userName}@${server}" "sudo tcpdump -i eth0 -N -n 'tcp port 1935' -w $remotePcapFile &"
+    scp "starttcpdump.sh" "${userName}@${server}:/home/$userName/"
+    sleep 1
+    ssh "${userName}@${server}" "/home/$userName/starttcpdump.sh eth0 $remotePcapFile"
     echo "Beginning stream in 4..."
     sleep 4
     ./startclient.sh -v -n 1 -s "rtmp://${server}:${rtmpPort}/${rtmpPath}/${streamFiles[0]}.${streamFormat}" -t "$streamMaxLength"
     echo "Stream over, killing remote tcpdump."
-    ssh "${userName}@${server}" 'sudo kill -2 $(pgrep tcpdump)'
+    sleep 4
+    ssh "${userName}@${server}" 'sudo kill -2 `pgrep tcpdump`'
 done
 
 # END MAIN
