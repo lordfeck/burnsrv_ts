@@ -13,20 +13,27 @@ fi
 
 function checkError {
 if [ "$?" -ne "0" ]; then
-    echo "Critical error when $1. Exiting."
+    echo "CRITICAL: Error when $1. Exiting."
     exit 1
+fi
+}
+
+function checkWarning {
+if [ "$?" -ne "0" ]; then
+    echo "WARNING: Failure when $1. Please check the configuration!"
 fi
 }
 
 # BEGIN PREPARATION SECTION
 # If Cap dir doesn't exist, make it.
-if [ ! -d "$capDir" ]; then
-    mkdir -p "$capDir"
+if [ ! -d "${capDir}/prev/" ]; then
+    mkdir -p "${capDir}/prev/"
 fi
 
-if [ "$clearCapDir" = "true" ]; then
-    rm -f $capDir/*
-fi
+#if [ "$clearCapDir" = "true" ]; then
+#    rm -f $capDir/*
+#    rm -f $capDir/prev/*
+#fi
 
 # Output diagnostic info.
 echo "Welcome to testrunner. My tasks are as follows:"
@@ -50,7 +57,7 @@ if ! which tcpdump >/dev/null; then
 fi
 
 # Sync time of all servers.
-if [ "$skipSync" != "true" ]; then
+if [ "$skipTestSync" != "true" ]; then
     ./greenwich.sh -s
 fi
 
@@ -62,18 +69,27 @@ startTime="$( date +'%M %S %N' )"
 # BEGIN MAIN TEST RUN LOOP
 # Run tcpdump locally and remotely. Start stream for one client (TODO: expand if necessary)
 echo "Launching tcpdump and performing stream on each specified server."
+
+# Backup previous captures
+find tcpdumps/* -maxdepth 0 -type f -exec mv -f -v {} tcpdumps/prev/ \;
+
 for server in "${streamServers[@]}"; do
     scp "starttcpdump.sh" "${userName}@${server}:/home/$userName/"
     sleep 1
     ssh "${userName}@${server}" "/home/$userName/starttcpdump.sh eth0 $pcapFileName"
+    checkError "Beginning remote tcpdump for $server."
     ./starttcpdump.sh "$localIface" "./$capDir/$server.local"
+    checkError "Beginning local tcpdump for ${server}"
     echo "Beginning stream in 4..."
     sleep 4
     ./startclient.sh -v -n 1 -s "rtmp://${server}:${rtmpPort}/${rtmpPath}/${streamFiles[0]}.${streamFormat}" -t "$streamMaxLength"
+    checkError "Beginning ${server}'s stream."
     echo "Stream over, killing remote and local tcpdump."
     sleep 4
     ssh "${userName}@${server}" 'sudo kill -2 `pgrep tcpdump`'
-    sudo kill -2 `pgrep tcpdump`
+    checkWarning "Killing remote TCPdump for $server"
+    sudo kill -2 `pgrep tcpdump` 2>&1 >/dev/null
+    checkWarning "Killing local TCPdump for $server"
     # remove any output from local tcpd run (uncomment to debug)
     #rm -vf "tcpderror.log"
 done
@@ -82,7 +98,7 @@ done
 
 # BEGIN HOUSEKEEPING & ANALYSIS
 # Retrieve tcpdump captures & remove old captures 
-echo "Retriving and/or removing ($removeOldCap) old captures..."
+echo "Retriving and/or removing=$removeOldCap old captures..."
 for server in "${streamServers[@]}"; do
     scp "${userName}@${server}:/home/$userName/$pcapFileName" "./$capDir/$server.remote"
     if [ "$removeOldCap" = "true" ]; then

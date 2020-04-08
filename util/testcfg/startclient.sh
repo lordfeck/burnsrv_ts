@@ -24,7 +24,7 @@ function vodStream {
 
 function spawnStreams {
     if [ "$clientCount" -eq "1" ]; then
-        echo "One client is required. Ignoring concurrent mode."
+#        echo "One client is required. Ignoring concurrent mode."
         vodStream
         return
     fi
@@ -34,7 +34,7 @@ function spawnStreams {
         ((clientCount--))
     done
 
-    echo "Client spawn complete. Awaiting user interrupt."
+    echo "Client spawn complete."
     wait
 }
 
@@ -54,8 +54,7 @@ while getopts ":hlvn:s:t:" opt; do
         l ) streamMode="live" ;;
         v ) streamMode="vod" ;;
         n ) clientCount="$OPTARG" ;;
-        s ) echo "Stream supplied by argument. ";
-            suppliedStream="$OPTARG" ;;
+        s ) suppliedStream="$OPTARG" ;;
         h ) echo -e "$banner"; exit 0 ;;
         t ) maxTime="$OPTARG" ;;
         \? ) echo -e "Invalid Argument.\n$banner"; exit 1 ;;
@@ -75,9 +74,7 @@ if [ "$streamMode" = "live" ]; then
 elif [ "$streamMode" = "vod" ]; then
     # assign the supplied stream argumet; if unset use default
     stream=${suppliedStream:-"$defaultVodStream"}
-    echo "VOD mode selected for $stream."
-    echo "Spawning $clientCount clients."
-    # This uses Bash job control; there may be a better way!
+    echo "VOD mode selected for $stream. Spawning $clientCount clients."
     spawnStreams 
 else
     echo "Invalid stream configuration."
