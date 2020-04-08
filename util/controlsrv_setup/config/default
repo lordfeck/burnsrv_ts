@@ -1,0 +1,35 @@
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+    root ##WWWROOT##/html;
+
+	server_name localhost;
+
+	location / {
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ =404;
+
+		# Add index.php to the list if you are using PHP
+		index index.html index.htm index.nginx-debian.html;
+	}
+
+
+    # Enable FastCGIWrapper
+    location /cgi-bin/ {
+        allow all;
+        gzip off;
+        # Set the root to /usr/lib (inside this location this means that we are
+        # giving access to the files under /usr/lib/cgi-bin)
+        root  ##WWWROOT##/;
+        # Fastcgi socket
+        fastcgi_pass  unix:/var/run/fcgiwrap.socket;
+        # Fastcgi parameters, include the standard ones
+        include /etc/nginx/fastcgi_params;
+        # Adjust non standard parameters (SCRIPT_FILENAME)
+        fastcgi_param SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    }
+
+}
+

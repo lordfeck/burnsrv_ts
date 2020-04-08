@@ -15,13 +15,6 @@ if [ "$1" = "-h" ]; then
     exit 0
 fi
 
-readonly timedir="greenwich_mean_times"
-readonly delay=70
-readonly skipSync="false"
-# Set to true to include local host time
-readonly doLocal="true"
-readonly cleanCron="true"
-
 . stream.config
 
 if [ "$cleanCron" = "true" ]; then
@@ -42,10 +35,16 @@ if [ "$skipSync" != "true" ]; then
     done
     if [ "$doLocal" = "true" ]; then
         sudo chronyd -q "server $ntpHost iburst"
+        sleep 1
+        sudo chronyd -q "server $ntpHost iburst"
+        sleep 1
+        sudo chronyd -q "server $ntpHost iburst"
+        sleep 1
     fi
     echo "Time sync complete."
 fi
 
+# We want sync only, so exit now.
 if [ "$1" = "-s" ]; then
     exit 0
 fi

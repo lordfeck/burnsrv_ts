@@ -3,7 +3,7 @@
 <html>
 <head>
 	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-	<title>burnsrv</title>
+	<title>controlsrv</title>
 	<link rel="stylesheet" type="text/css" href="styles/layout_main.css">
     <!-- JavaScript to update health stats. -->
     <script type="text/javascript">
@@ -24,7 +24,12 @@
             sysReq.open("GET", "cgi-bin/jsonstats.cgi", true);
             sysReq.send();
         }, 1000);
-        
+        /* TODO: SysStats for other servers, all shown on the controllsrv page
+        var intervalTimerS1 = window.setInterval(function(){
+            sysReq.open("GET", "http://qub-streamer.thran.uk/cgi-bin/jsonstats.cgi", "true");
+            sysReq.send();
+        }, 1000);
+       */ 
         // Stop Polling Button
         function stopPollingBtn(){
             window.clearInterval(intervalTimer);
@@ -34,16 +39,17 @@
 </head>
 <body>
 	<div id="topBar">
-    	<img id="logo" src="img/burnsrv.gif" >
-		<h1 id="titleHeader">burnsrv</h1>
+    	<img id="logo" src="img/hamster_in_rad2.gif" >
+		<h1 id="titleHeader">controlsrv</h1>
 	</div>
 	<div id="bodyContainer">
 		<div id="topMenu">
-			SRVRING: <a href="http://control.thran.uk/">Controlsrv</a> // <a href="stat">Generated RTMP Stats</a> //
+			SRVRING: <a href="#">Controlsrv</a> // <a href="http://qub-streamer.thran.uk/">Burnsrv AZ</a> // <a href="http://qub-streamer2.thran.uk">Burnsrv AWS</a> // 
 		</div>
-		<p class="newsItem">Burnsrv Streamer</p>
-        <p>Video streams are available on this host over RTMP.</p>
-		<p class="newsItem">StreamSrv Health Monitor</p>
+		<p class="newsItem">Burnsrv Stream List</p>
+		<p>Select a video to stream:</p>
+
+		<p class="newsItem">ControlSrv Health Monitor</p>
         <p>This section shows the memory usage of all NGINX processes.</p>
 		<table class="healthTable">
             <thead>
@@ -81,7 +87,7 @@
         <p><a href="javascript:stopPollingBtn()" id="stopPolling">Stop Health Polling</a></p>
 	</div>
 	<div id="footer">
-        <p class="footerText">Created in 2019 by MJB // Carefully crafted using <a href="http://www.vim.org" target="_blank">Vim</a></p>
+        <p class="footerText">Created in 2020 by MJB // Carefully crafted using <a href="http://www.vim.org" target="_blank">Vim</a></p>
         <p class="footerText"><a href="https://www.qub.ac.uk/schools/eeecs/">QUB EEECS</a></p>
 	</div>
 </body>
