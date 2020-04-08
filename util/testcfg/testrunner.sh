@@ -30,11 +30,6 @@ if [ ! -d "${capDir}/prev/" ]; then
     mkdir -p "${capDir}/prev/"
 fi
 
-#if [ "$clearCapDir" = "true" ]; then
-#    rm -f $capDir/*
-#    rm -f $capDir/prev/*
-#fi
-
 # Output diagnostic info.
 echo "Welcome to testrunner. My tasks are as follows:"
 
@@ -71,10 +66,10 @@ startTime="$( date +'%M %S %N' )"
 echo "Launching tcpdump and performing stream on each specified server."
 
 # Backup previous captures
-find tcpdumps/* -maxdepth 0 -type f -exec mv -f -v {} tcpdumps/prev/ \;
+find ${capDir}/* -maxdepth 0 -type f -exec mv -f -v {} ${capDir}/prev/ \;
 
 for server in "${streamServers[@]}"; do
-    scp "starttcpdump.sh" "${userName}@${server}:/home/$userName/"
+    scp -q "starttcpdump.sh" "${userName}@${server}:/home/$userName/"
     sleep 1
     ssh "${userName}@${server}" "/home/$userName/starttcpdump.sh eth0 $pcapFileName"
     checkError "Beginning remote tcpdump for $server."

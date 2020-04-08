@@ -25,7 +25,7 @@ fi
 if [ "$skipSync" != "true" ]; then
     echo "Running a triple NTP sync operation for all hosts..."
     for server in "${streamServers[@]}"; do
-        # FIXME: $ntpHost didn't play well with ssh, so we hard-coded it.
+        # TODO: $ntpHost didn't play well with ssh, so we hard-coded it.
         ssh "${userName}@${server}" "sudo chronyd -q 'server 0.uk.pool.ntp.org iburst'"
         sleep 1
         ssh "${userName}@${server}" "sudo chronyd -q 'server 0.uk.pool.ntp.org iburst'"
@@ -53,7 +53,7 @@ fi
 
 echo "Setting cron job to dump time in 1m for all hosts..."
 for server in "${streamServers[@]}"; do
-    scp "./gpolltime.sh" "${userName}@${server}:/home/$userName/"
+    scp -q "./gpolltime.sh" "${userName}@${server}:/home/$userName/"
     ssh "${userName}@${server}" "echo -e '* * * * * /home/$userName/gpolltime.sh' \"\n\" | crontab"
 done
 
