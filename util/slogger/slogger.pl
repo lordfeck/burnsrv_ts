@@ -8,22 +8,73 @@ use feature ':5.10';
 
 package slogger;
 
-$srvListPath="../testcfg/servers.csv";
+# DEFINE GLOBAL VARS
+glob $srvListPath="../testcfg/servers.csv";
+glob $tcpdTxtDir="/tmp/";
+glob $resultsFolder="../testcfg/results/";
+glob @servers;
+glob @srvdesc;
+glob @packetTimes;
 
+# Life would be nice if I could make slogger read stream.config and grab this value.
+glob $capDir="../testcfg/tcpdumps/";
+
+# DEFINE SUBROUTINES
+sub dumpTcpDump {
+    # Convert tcpdump to text
+    system "2>&- tcpdump -r $capDir/@_ > $tcpdTxtDir/@_.txt";
+
+    unless ( -T "$tcpdTxtDir/@_.txt" ){
+        die "tcpdump text file missing! Check permissions for $tcpdTxtDir.";
+    }
+}
+
+sub readInServerList {
+    open (SRVLIST, "<", "$srvListPath") or die "Critical! Failed to open server list CSV!\n";
+
+    while ($line = <SRVLIST>) {
+        chop($line);
+        ($hostname, $shortdesc, $longdesc) = split(",", $line);
+        $servers{$shortdesc} = $hostname;
+        $srvdesc{$shortdesc} = $longdesc;
+    }
+    close (SRVLIST);
+}
+
+#eventually will be some kind of array
+sub readTcpTxt {
+    open (TCPTXT, "<", "$tcpdTxtDir/@_.txt") or die "Can't open @_.txt";
+    $line = <TCPTXT>;
+    chop($line);
+    say "Debug: Line is... $line.";
+    @linearray = split(" ", $line);
+    $packetTimes[0] = $linearray[0];
+    close TCPTXT;
+#    return $line =~ /^\d{2}:\d{2}:\d{2}\.\d{6}\s+/;
+}
+
+# BEGIN MAIN EXECUTION
 say "Welcome to slogger!";
 
-open (SRVLIST, "<", "$srvListPath") or die "Critical! Failed to open server list CSV!\n";
+readInServerList();
 
-# First read them in
-while ($line = <SRVLIST>) {
-    ($hostname, $shortdesc, $longdesc) = split(",", $line);
-    $servers{$shortdesc} = $hostname;
-    $longDescs{$shortdesc} = $longdesc;
+# Read them back to be sure it worked.
+say "Server list and information:";
+foreach $shortdesc (keys %servers) {
+    say "$shortdesc is $servers{$shortdesc}. Notes: $srvdesc{$shortdesc}.";
 }
 
-# Read them back to be sure it worked. (not quite right yet)
-foreach $hostname (%servers) {
-    say "$hostname";
-}
+dumpTcpDump("qub-streamer.thran.uk.local");
+dumpTcpDump("qub-streamer.thran.uk.remote");
 
-close (SRVLIST);
+say "Extracted dumpfiles to /tmp, now parsing...";
+
+readTcpTxt("qub-streamer.thran.uk.local");
+say "Time 0 is: $packetTimes[0]";
+
+# do some calculations
+
+# output to csv
+
+# send to charttopper.pl
+

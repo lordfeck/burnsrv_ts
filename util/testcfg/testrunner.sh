@@ -89,6 +89,9 @@ for server in "${streamServers[@]}"; do
     #rm -vf "tcpderror.log"
 done
 
+echo "Correcting ownership inside $capDir recursively."
+sudo chown -R $localUser $capDir
+
 # END MAIN
 
 # BEGIN HOUSEKEEPING & ANALYSIS
