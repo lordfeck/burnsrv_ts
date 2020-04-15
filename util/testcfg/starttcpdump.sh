@@ -12,7 +12,7 @@ if [ ! -n "$iface" ] || [ ! -n "$pcapFile" ]; then
 fi
 
 echo "started: $(date) iface: $iface pcapFile: $pcapFile" > tcpderror.log
-nohup sudo tcpdump -i "$iface" -N -n 'tcp port 1935' -w "$pcapFile" 2>> tcpderror.log 1>/dev/null &
+nohup sudo tcpdump -i "$iface" -N -n 'tcp port 1935' -B 10000 -w "$pcapFile" 2>> tcpderror.log 1>/dev/null &
 
 if [ "$?" -ne 0 ]; then
     echo "Problem starting TCPdump." >> tcpderror.log

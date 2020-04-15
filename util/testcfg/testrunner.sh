@@ -10,7 +10,6 @@ fi
 
 . stream.config
 
-
 function checkError {
 if [ "$?" -ne "0" ]; then
     echo "CRITICAL: Error when $1. Exiting."
@@ -31,7 +30,7 @@ if [ ! -d "${capDir}/prev/" ]; then
 fi
 
 # Output diagnostic info.
-echo "Welcome to testrunner. My tasks are as follows:"
+echo "Welcome to testrunner."
 
 echo -n "Stream server list: "
 for server in "${streamServers[@]}"; do
@@ -39,11 +38,11 @@ for server in "${streamServers[@]}"; do
 done
 echo ""
 
-echo -n "These are: "
-for desc in "${streamServersDesc[@]}"; do
-    echo -n "$desc, "
-done
-echo ""
+#echo -n "These are: "
+#for desc in "${streamServersDesc[@]}"; do
+#    echo -n "$desc, "
+#done
+#echo ""
 
 # Test for local presence of tcpdump
 if ! which tcpdump >/dev/null; then
@@ -96,7 +95,7 @@ sudo chown -R $localUser $capDir
 
 # BEGIN HOUSEKEEPING & ANALYSIS
 # Retrieve tcpdump captures & remove old captures 
-echo "Retriving and/or removing=$removeOldCap old captures..."
+echo "Retrieving and/or removing=$removeOldCap old captures..."
 for server in "${streamServers[@]}"; do
     scp "${userName}@${server}:/home/$userName/$pcapFileName" "./$capDir/$server.remote"
     if [ "$removeOldCap" = "true" ]; then
