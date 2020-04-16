@@ -24,7 +24,6 @@ function vodStream {
 
 function spawnStreams {
     if [ "$clientCount" -eq "1" ]; then
-#        echo "One client is required. Ignoring concurrent mode."
         vodStream
         return
     fi
