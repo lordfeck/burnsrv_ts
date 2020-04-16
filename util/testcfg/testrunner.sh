@@ -10,7 +10,7 @@ fi
 
 . stream.config
 declare -a streamServers
-
+let svrIdx=0
 # how to read in csv to bash, src: https://stackoverflow.com/a/4286841/11937530
 function readInServers {
     if [ ! -s "$1" ]; then
@@ -21,8 +21,8 @@ function readInServers {
     let i=0
     while IFS=, read -r hostname shortdesc longdesc
     do
-        streamServers[$i]="$hostname"
-        ((i++))
+        streamServers[$svrIdx]="$hostname"
+        ((svrIdx++))
     done < "$1"
 }
 
@@ -71,6 +71,10 @@ fi
 # END PREP
 
 # BEGIN MAIN TEST RUN LOOP
+
+# Set date to identify the test run.
+startDate="$( date '+%F %T' )"
+
 # Run tcpdump locally and remotely. Start stream for one client (TODO: expand if necessary)
 echo "Launching tcpdump and performing stream on each specified server."
 
