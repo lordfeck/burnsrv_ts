@@ -9,8 +9,9 @@ if [ ! -s "stream.config" ]; then
 fi
 
 . stream.config
-declare -a streamServers
+declare -a streamServers shortDescs
 let svrIdx=0
+
 # how to read in csv to bash, src: https://stackoverflow.com/a/4286841/11937530
 function readInServers {
     if [ ! -s "$1" ]; then
@@ -22,6 +23,7 @@ function readInServers {
     while IFS=, read -r hostname shortdesc longdesc
     do
         streamServers[$svrIdx]="$hostname"
+        shortDescs[$svrIdx]="$shortdesc"
         ((svrIdx++))
     done < "$1"
 }
@@ -40,12 +42,16 @@ function checkWarning {
 }
 
 # BEGIN PREPARATION SECTION
-
 readInServers "$serverList"
 
 # If Cap dir doesn't exist, make it.
 if [ ! -d "${capDir}/prev/" ]; then
     mkdir -p "${capDir}/prev/"
+fi
+
+# If log dir doesn't exist, make it.
+if [ ! -d "${logdir}/" ]; then
+    mkdir "${logdir}/"
 fi
 
 # Output diagnostic info.
@@ -74,13 +80,40 @@ fi
 
 # Set date to identify the test run.
 startDate="$( date '+%F %T' )"
+logFileName="${logBaseName}-${startDate}.csv"
 
-# Run tcpdump locally and remotely. Start stream for one client (TODO: expand if necessary)
+# First create the blank logfile
+touch "$logDir/$logFileName"
+checkError "accessing the logfile at $logDir/$logFileName"
+
+# Run tcpdump locally and remotely. Start stream for one client (TODO: increase client count)
 echo "Launching tcpdump and performing stream on each specified server."
 
 # Backup previous captures
 2>&1 find ${capDir}/* -maxdepth 0 -type f -exec mv -f -v {} ${capDir}/prev/ \; >/dev/null
 checkWarning "backing up old captures"
+
+# Yes, there are many loops. But this allows for limitless expansion.
+# This will all be logged and expand without making previous data useless.
+for vid in "${streamFiles[@]}"; do
+    for res in "${resolutions[@]}"; do
+        for quant in "${quants[@]}"; do
+            for length in "${lengths[@]}"; do
+                let i=0
+                while [ "$i" -lt "$svrIdx" ]; do
+                    echo $"${streamServers[i]} ${shortDescs[i]}" $vid $res $quant $length
+                    ((i++))
+                done
+            done
+        done
+    done
+done
+
+
+exit
+
+# PUT THIS INTO THE ABOVE LOOP, perhaps as a FN.
+# we have "echo" writing much of what we need, just send it to a csv with the details
 
 for server in "${streamServers[@]}"; do
     scp -q "starttcpdump.sh" "${userName}@${server}:/home/$userName/"
@@ -94,7 +127,7 @@ for server in "${streamServers[@]}"; do
 
     # %s - seconds since unix epoch, %N is nanoseconds
     before="$( date '+%s%N' )"
-    ./startclient.sh -v -n 1 -s "rtmp://${server}:${rtmpPort}/${rtmpPath}/${streamFiles[0]}.${streamFormat}" -t "$streamMaxLength"
+    ./startclient.sh -v -n "$testClients" -s "rtmp://${server}:${rtmpPort}/${rtmpPath}/${streamFiles[0]}.${streamFormat}" -t "$streamMaxLength"
     after="$( date '+%s%N' )"
     # checkError "Beginning ${server}'s stream."
     echo "Stream over, killing remote and local tcpdump."
