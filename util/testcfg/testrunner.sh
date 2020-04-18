@@ -12,6 +12,8 @@ fi
 declare -a streamServers shortDescs
 let svrIdx=0
 
+# DEFINE FUNCTIONS
+
 # how to read in csv to bash, src: https://stackoverflow.com/a/4286841/11937530
 function readInServers {
     if [ ! -s "$1" ]; then
@@ -28,6 +30,7 @@ function readInServers {
     done < "$1"
 }
 
+# simple error handling
 function checkError {
     if [ "$?" -ne "0" ]; then
         echo "CRITICAL: Error when $1. Exiting."
@@ -41,6 +44,73 @@ function checkWarning {
     fi
 }
 
+# functions for main loop
+
+# Grab remote capture (only call inside doStream)
+function getRemoteCapture {
+    echo "Retrieving ${removeOldCap:+and removing} capture from $shortDesc..."
+    scp -q "${userName}@${server}:/home/$userName/$pcapFileName" "./$capDir/$shortDesc.remote"
+    checkError "retrieving capture from $server"
+    if [ "$removeOldCap" = "true" ]; then
+        ssh "${userName}@${server}" rm "/home/$userName/$pcapFileName"
+    else
+        echo "Old capture left on $server."
+    fi
+}
+
+# We may want to keep the last run's captures for debugging. If so, call this fn.
+function backupOldCaptures {
+    2>&1 find ${capDir}/* -maxdepth 0 -type f -exec mv -f -v {} ${capDir}/prev/ \; >/dev/null
+    checkWarning "backing up old captures"
+}
+
+# This will be called once for each configuration. Uses variables declared
+# outside the function body but within its scope.
+function doStream {
+    server="${streamServers[i]}"
+    shortDesc="${shortDescs[i]}"
+
+    backupOldCaptures
+
+    scp -q "starttcpdump.sh" "${userName}@${server}:/home/$userName/" 
+    sleep 1
+    ssh "${userName}@${server}" "/home/$userName/starttcpdump.sh eth0 $pcapFileName $tcpderr"
+    checkError "Beginning remote tcpdump for $server."
+    ./starttcpdump.sh "$localIface" "./$capDir/$shortDesc.local" "$tcpderr"
+    checkError "Beginning local tcpdump for ${server}"
+    echo "Beginning stream for $server length $streamMaxLength in 4..."
+    sleep 4
+
+    # %s - seconds since unix epoch, %N is nanoseconds
+    before="$( date '+%s%N' )"
+    ./startclient.sh -v -n "$testClients" -s "rtmp://${server}:${rtmpPort}/${rtmpPath}/$vid-$quant-$res.$streamContainer" -t "$length"
+    after="$( date '+%s%N' )"
+    echo "Stream over, killing remote and local tcpdump."
+    sleep 4
+
+    ssh "${userName}@${server}" 'sudo kill -2 `pgrep tcpdump`'
+    checkWarning "Killing remote TCPdump for $server"
+    sudo kill -2 `pgrep tcpdump` 2>&1 >/dev/null
+    checkWarning "Killing local TCPdump for $server"
+
+    runtime="$((after-before))"
+    ms="$((runtime/1000000))"
+    echo "Stream ran for $ms ms"
+
+    getRemoteCapture
+
+    # local capfiles have invalid perms (tcpdump user owns it), correct it now
+    echo "Correcting ownership inside $capDir recursively."
+    sudo chown -R $localUser $capDir
+
+    # get local packet count
+    localPackets="$( grep 'packets captured' "$tcpderr" | cut -d ' ' -f1 )"
+    checkError "packet count"
+
+    # csv format: vidfile, shortdesc, clientcount, vidlength, quant, res, streamtime, packets
+    echo "$vid,$shortDesc,$testClients,$length,$quant,$res,$runtime,$localPackets" >> "$logFilePath"
+}
+
 # BEGIN PREPARATION SECTION
 readInServers "$serverList"
 
@@ -50,8 +120,8 @@ if [ ! -d "${capDir}/prev/" ]; then
 fi
 
 # If log dir doesn't exist, make it.
-if [ ! -d "${logdir}/" ]; then
-    mkdir "${logdir}/"
+if [ ! -d "${logDir}/" ]; then
+    mkdir "${logDir}/"
 fi
 
 # Output diagnostic info.
@@ -79,92 +149,39 @@ fi
 # BEGIN MAIN TEST RUN LOOP
 
 # Set date to identify the test run.
-startDate="$( date '+%F %T' )"
-logFileName="${logBaseName}-${startDate}.csv"
+startDate="$( date '+%F-%H%M%S' )"
+logFilePath="$logDir/${logBaseName}-${startDate}.csv"
+totalStreams="$((${#streamFiles[@]}*${#resolutions[@]}*${#quants[@]}*${#lengths[@]}*${#streamServers[@]}))"
 
 # First create the blank logfile
-touch "$logDir/$logFileName"
-checkError "accessing the logfile at $logDir/$logFileName"
+touch "$logFilePath"
+checkError "accessing the logfile at $logDir/$logFilePath"
 
-# Run tcpdump locally and remotely. Start stream for one client (TODO: increase client count)
 echo "Launching tcpdump and performing stream on each specified server."
-
-# Backup previous captures
-2>&1 find ${capDir}/* -maxdepth 0 -type f -exec mv -f -v {} ${capDir}/prev/ \; >/dev/null
-checkWarning "backing up old captures"
+echo "We have $totalStreams total streams to run."
 
 # Yes, there are many loops. But this allows for limitless expansion.
-# This will all be logged and expand without making previous data useless.
 for vid in "${streamFiles[@]}"; do
     for res in "${resolutions[@]}"; do
         for quant in "${quants[@]}"; do
             for length in "${lengths[@]}"; do
+                # BEGIN SERVER LOOP - i is used inside doStream.
                 let i=0
                 while [ "$i" -lt "$svrIdx" ]; do
-                    echo $"${streamServers[i]} ${shortDescs[i]}" $vid $res $quant $length
+                    doStream
                     ((i++))
                 done
+                # END SERVER LOOP
             done
         done
     done
 done
 
-
-exit
-
-# PUT THIS INTO THE ABOVE LOOP, perhaps as a FN.
-# we have "echo" writing much of what we need, just send it to a csv with the details
-
-for server in "${streamServers[@]}"; do
-    scp -q "starttcpdump.sh" "${userName}@${server}:/home/$userName/"
-    sleep 1
-    ssh "${userName}@${server}" "/home/$userName/starttcpdump.sh eth0 $pcapFileName"
-    checkError "Beginning remote tcpdump for $server."
-    ./starttcpdump.sh "$localIface" "./$capDir/$server.local"
-    checkError "Beginning local tcpdump for ${server}"
-    echo "Beginning stream for $server length $streamMaxLength in 4..."
-    sleep 4
-
-    # %s - seconds since unix epoch, %N is nanoseconds
-    before="$( date '+%s%N' )"
-    ./startclient.sh -v -n "$testClients" -s "rtmp://${server}:${rtmpPort}/${rtmpPath}/${streamFiles[0]}.${streamFormat}" -t "$streamMaxLength"
-    after="$( date '+%s%N' )"
-    # checkError "Beginning ${server}'s stream."
-    echo "Stream over, killing remote and local tcpdump."
-    sleep 4
-
-    ssh "${userName}@${server}" 'sudo kill -2 `pgrep tcpdump`'
-    checkWarning "Killing remote TCPdump for $server"
-    sudo kill -2 `pgrep tcpdump` 2>&1 >/dev/null
-    checkWarning "Killing local TCPdump for $server"
-    # remove any output from local tcpd run (comment out to debug)
-    #rm -vf "tcpderror.log"
-
-    runtime="$((after-before))"
-    ms="$((runtime/1000000))"
-    echo $runtime > "${capDir}/${server}.runtime"
-    echo "Stream ran for $runtime ns, i.e. $ms ms"
-
-done
-
-echo "Correcting ownership inside $capDir recursively."
-sudo chown -R $localUser $capDir
-
 # END MAIN
 
-# BEGIN HOUSEKEEPING & ANALYSIS
-# Retrieve tcpdump captures & remove old captures 
-echo "Retrieving ${removeOldCap:+'and removing'} old captures on the remote hosts..."
-for server in "${streamServers[@]}"; do
-    scp "${userName}@${server}:/home/$userName/$pcapFileName" "./$capDir/$server.remote"
-    if [ "$removeOldCap" = "true" ]; then
-        ssh "${userName}@${server}" rm "/home/$userName/$pcapFileName"
-    else
-        echo "Old capture left on $server."
-    fi
-done
+# BEGIN ANALYSIS
 
 # launch slogger for analysis
 echo "Launching slogger... NOT YET"
 
-# END HOUSEKEEPING
+# END ANALYSIS

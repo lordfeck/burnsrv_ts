@@ -4,7 +4,8 @@
 # MJB 20/01/2020, updated 16/04/2020
 
 banner='MakeMPEG. Usage:\n./makempeg.sh <inputfile.mp4>\nRelies upon stream.config to get conversion formats.'
-streamcfg="../testcfg/stream.config"
+streamcfg="stream.config"
+# ../testcfg/stream.config
 
 if [ ! -s "$streamcfg" ]; then
     echo "Critical failure: stream.config file doesn't exist or is empty. Exiting."
@@ -15,17 +16,25 @@ fi
 
 # Cut to 'islands' + 5m
 # -async 1 may be necessary
-readonly timearg='-ss 00:02:35 -t 00:07:36'
+#readonly timearg='-ss 00:02:35 -t 00:05:00'
+
+function checkError {
+    if [ "$?" -ne "0" ]; then
+        echo "CRITICAL: Failure when $1. Exiting."
+        exit 1
+    fi
+}
 
 # this function takes its args from the loops below
 function runff
 {
     local outfile="${basename}-${quant}-${res}.mp4"
     echo "Launching FFMPEG to convert $infile to $outfile"
-    # -vcodec copy ?
-    local ffargs="-y -i $infile $timearg -acodec copy -c:v libx265 -preset slow -crf $quant -s $res $outfile"
+    local ffargs="-y -i $infile $timearg -acodec copy -c:v libx264 -preset slow -crf $quant -s $res $outfile"
     echo FFARGS: $ffargs
     ffmpeg $ffargs
+    # we may want this on or we may not
+    checkError "encoding $basename $quant $res."
 }
 
 # if we get incorrect args then show the banner
@@ -37,15 +46,17 @@ else
 fi
 
 # chop infile name of its extension for renaming
-basename="${infile%'.mp4'}"
+basename="${infile%'.y4m'}"
 
-# quick calculation to verify we've read the file correctly
+# quick calculation to verify we've read the config file correctly
 resc=${#resolutions[@]}
 quantc=${#quants[@]}
 total="$((resc*quantc))"
 
 echo "MakeMPEG. Will produce $total total files."
 echo "Resolutions: ${resolutions[@]}. CRF aka Quantisations: ${quants[@]}."
+echo "Beginning in 2..."
+sleep 2
 
 # Main double loop to do conversions and call runff
 
