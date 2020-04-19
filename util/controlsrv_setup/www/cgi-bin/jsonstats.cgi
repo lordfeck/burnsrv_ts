@@ -3,6 +3,9 @@
 # Author: MJB Authored: 06/12/19
 . common.sh
 
+testUser="mjb"
+testFlag=".testrunning"
+
 writeJSONHeader
 
 # CPU Usage in tenths of a percent
@@ -27,8 +30,16 @@ function getLoadAvg {
 }
 
 # Resident set size; total of process in memory
-function getNginxRSS {
-    ps --no-headers -C nginx -o rss |  awk '{rss += $1} END {print rss}'
+function getProcRSS {
+    ps --no-headers -C "$1" -o rss |  awk '{rss += $1} END {print rss}'
+}
+
+function isTestRunning {
+   if [ -e "/home/$testUser/$testFlag" ]; then
+        echo "true"
+   else
+        echo "false" 
+   fi
 }
 
 # Begin JSON composition
@@ -50,6 +61,12 @@ jT "nginxCPUPerc"
 jF "$(getNginxCPUPerc)" 
 
 jT "nginxRssKb"
-jF "$(getNginxRSS)" "f"
+jF "$(getProcRSS nginx )"
+
+jT "ffmpegRssKb"
+jF "$(getProcRSS ffmpeg )"
+
+jT "isTestRunning"
+jF "$(isTestRunning)" "f"
 
 echo "}"

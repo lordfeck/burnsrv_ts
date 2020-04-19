@@ -16,8 +16,8 @@
                      document.getElementById("uptime").innerHTML = sysstats.uptime;
                      document.getElementById("loadAvg").innerHTML = sysstats.loadAvg;
                      document.getElementById("memUsage").innerHTML = sysstats.totalMem + " MB";
-                     document.getElementById("rssUsage").innerHTML = sysstats.nginxRssKb + " KB";
-                     document.getElementById("procCPU").innerHTML = sysstats.nginxCPU + "%";
+                     document.getElementById("ffRss").innerHTML = sysstats.ffmpegRssKb + " KB";
+                     document.getElementById("isTestRunning").innerHTML = sysstats.isTestRunning;
                 }
             };
         // Call update every second.
@@ -51,18 +51,18 @@
 		<p>Select a video to stream:</p>
 
 		<p class="newsItem">ControlSrv Health Monitor</p>
-        <p>This section shows the memory usage of all NGINX processes.</p>
+        <p>This section shows the memory usage of all relevant processes.</p>
 		<table class="healthTable">
             <thead>
                 <tr>
-                    <th>RSS Usage</th>
-                    <th>CPU Usage</th>
+                    <th>RSS - Stream Client</th>
+                    <th>Test Run Status</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td id="rssUsage">Awaiting Data</td>
-                    <td id="procCPU">Awaiting Data</td>
+                    <td id="ffRss">Awaiting Data</td>
+                    <td id="isTestRunning">Awaiting Data</td>
                 </tr>
             </tbody>
         </table>

@@ -14,6 +14,14 @@ let svrIdx=0
 
 # DEFINE FUNCTIONS
 
+function setTestFlag {
+    if [ "$1" = "clear" ]; then
+        rm -f $HOME/.testrunning
+    else
+        touch $HOME/.testrunning
+    fi
+}
+
 # how to read in csv to bash, src: https://stackoverflow.com/a/4286841/11937530
 function readInServers {
     if [ ! -s "$1" ]; then
@@ -112,6 +120,9 @@ function doStream {
 }
 
 # BEGIN PREPARATION SECTION
+
+setTestFlag
+
 readInServers "$serverList"
 
 # If Cap dir doesn't exist, make it.
@@ -185,3 +196,5 @@ done
 echo "Launching slogger... NOT YET"
 
 # END ANALYSIS
+
+setTestFlag "clear"
