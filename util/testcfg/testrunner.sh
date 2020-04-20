@@ -54,6 +54,10 @@ function checkWarning {
 
 # functions for main loop
 
+function doPing {
+    ping -c 3 "$server" | grep avg | cut -d '/' -f 5
+}
+
 # Grab remote capture (only call inside doStream)
 function getRemoteCapture {
     echo "Retrieving ${removeOldCap:+and removing} capture from $shortDesc..."
@@ -79,6 +83,9 @@ function doStream {
     shortDesc="${shortDescs[i]}"
 
     backupOldCaptures
+
+    local myPing="$(doPing)"
+    echo "Average ping for $shortDesc is: $myPing."
 
     scp -q "starttcpdump.sh" "${userName}@${server}:/home/$userName/" 
     sleep 1
@@ -115,8 +122,8 @@ function doStream {
     localPackets="$( grep 'packets captured' "$tcpderr" | cut -d ' ' -f1 )"
     checkError "packet count"
 
-    # csv format: vidfile, shortdesc, clientcount, vidlength, quant, res, streamtime, packets
-    echo "$vid,$shortDesc,$testClients,$length,$quant,$res,$runtime,$localPackets" >> "$logFilePath"
+    # csv format: vidfile, shortdesc, clientcount, vidlength, quant, res, streamtime, packets, avgping
+    echo "$vid,$shortDesc,$testClients,$length,$quant,$res,$runtime,$localPackets,$myPing" >> "$logFilePath"
 }
 
 # BEGIN PREPARATION SECTION
