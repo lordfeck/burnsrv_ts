@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>controlsrv : Test Control</title>
+	<link rel="stylesheet" type="text/css" href="styles/layout_main.css">
+
+    <!-- JavaScript to update test stats. -->
+    <script type="text/javascript">
+        var sysstats;
+        var sysReq = new XMLHttpRequest();
+            sysReq.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                     sysstats = JSON.parse(sysReq.responseText);
+                     document.getElementById("isTestRunning").innerHTML = sysstats.isTestRunning;
+                }
+            };
+
+        // Call update every second.
+        var intervalTimer = window.setInterval(function(){
+            sysReq.open("GET", "cgi-bin/jsonstats.cgi", true);
+            sysReq.send();
+        }, 1000);
+    </script>
+</head>
+<body>
+	<div id="topBar">
+    	<img id="logo" src="img/hamster_in_rad2.gif" >
+		<h1 id="titleHeader">testcontrol</h1>
+	</div>
+	<div id="bodyContainer">
+		<div id="topMenu">
+			SYSTEM MENU: <a href="index.html">Controlsrv</a> // <a href="testcontrol.html">Test Control</a> // 
+		</div>
+		<p class="newsItem">System Status</p>
+		<table class="healthTable">
+            <thead>
+                <tr>
+                    <th>Test Running</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="isTestRunning">Awaiting Data</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="newsItem">System Control</p>
+        <p>Please enter the password and click 'SUBMIT' to begin a test run.</p>
+        <p>If a test isn't currently running, a new test run will begin.</p>
+        <p> <form action="/cgi-bin/testlauncher.cgi" method="post">
+        <label for="passwd">Password:</label> <input type="password" id="passwd" name="passwd" value="WRONG">
+        <input type="submit" value="Submit">
+        </form> </p> 
+	</div>
+	<div id="footer">
+        <p class="footerText">Created in 2020 by MJB // Carefully crafted using <a href="http://www.vim.org" target="_blank">Vim</a></p>
+        <p class="footerText"><a href="https://www.qub.ac.uk/schools/eeecs/">QUB EEECS</a></p>
+	</div>
+</body>
+</html>

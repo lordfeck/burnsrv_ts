@@ -25,12 +25,6 @@
             sysReq.open("GET", "cgi-bin/jsonstats.cgi", true);
             sysReq.send();
         }, 1000);
-        /* TODO: SysStats for other servers, all shown on the controllsrv page
-        var intervalTimerS1 = window.setInterval(function(){
-            sysReq.open("GET", "http://qub-streamer.thran.uk/cgi-bin/jsonstats.cgi", "true");
-            sysReq.send();
-        }, 1000);
-       */ 
         // Stop Polling Button
         function stopPollingBtn(){
             window.clearInterval(intervalTimer);
@@ -49,8 +43,9 @@
 		</div>
 		<p class="newsItem">Burnsrv Stream List</p>
 		<p>Select a video to stream:</p>
+        <p>Note: Until a web player is available, please use VLC Media Player to stream videos.</p>
 
-		<p class="newsItem">ControlSrv Health Monitor</p>
+        <p class="newsItem">ControlSrv Health Monitor</p>
         <p>This section shows the memory usage of all relevant processes.</p>
 		<table class="healthTable">
             <thead>
@@ -84,9 +79,14 @@
                 </tr>
             </tbody>
         </table>
+
         <p class="newsItem">System Control</p>
-        <p><a href="javascript:stopPollingBtn()" id="stopPolling">Stop Health Polling</a></p>
+            <p><a href="javascript:stopPollingBtn()" id="stopPolling">Stop Health Polling</a></p>
+            <p><a href="testcontrol.html">Test Control</a></p>
+            <p><a href="results/">Download Results CSVs</a></p>
+
 	</div>
+
 	<div id="footer">
         <p class="footerText">Created in 2020 by MJB // Carefully crafted using <a href="http://www.vim.org" target="_blank">Vim</a></p>
         <p class="footerText"><a href="https://www.qub.ac.uk/schools/eeecs/">QUB EEECS</a></p>
