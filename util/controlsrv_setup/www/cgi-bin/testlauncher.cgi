@@ -28,7 +28,6 @@ sub launchTests {
 
         local $CWD=$testCfgDir;
         exec ("sudo -u $testUser ./testrunner.sh") or say "Problem launching testrunner.sh.";
-        exec(@cmd);
     }
     else {
         print "Testrunner failed to launch!";
