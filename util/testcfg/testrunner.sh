@@ -96,7 +96,7 @@ function doStream {
     checkError "Beginning remote tcpdump for $server."
     ./starttcpdump.sh "$localIface" "./$capDir/$shortDesc.local" "$tcpderr"
     checkError "Beginning local tcpdump for ${server}"
-    echo "Beginning stream for $server length $length in 4..."
+    echo "Beginning stream $currentStreamId out of $totalStreams for $server length $length in 4..."
     sleep 4
 
     # %s - seconds since unix epoch, %N is nanoseconds
@@ -127,6 +127,7 @@ function doStream {
 
     # csv format: vidfile, shortdesc, clientcount, vidlength, quant, res, streamtime, packets, avgping
     echo "$vid,$shortDesc,$testClients,$length,$quant,$res,$runtime,$localPackets,$myPing" >> "$logFilePath"
+    ((currentStreamId++))
 }
 
 # BEGIN PREPARATION SECTION
@@ -173,6 +174,7 @@ fi
 startDate="$( date '+%F-%H%M%S' )"
 logFilePath="$logDir/${logBaseName}-${startDate}.csv"
 totalStreams="$((${#streamFiles[@]}*${#resolutions[@]}*${#quants[@]}*${#lengths[@]}*${#streamServers[@]}))"
+currentStreamId=0;
 
 # First create the blank logfile
 touch "$logFilePath"
