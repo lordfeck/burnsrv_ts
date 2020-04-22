@@ -43,7 +43,6 @@ function check_os
         packager="apt-get -qy install"
         query="dpkg -s"
     elif [ "$opsys" = "CentOS" ]; then
-        echo -e "Note: libnginx-mod-rtmp isn't available in YUM repositories.\nPlease install manually."
         packager="yum -qy install"
         query="rpm -q"
     else
@@ -84,18 +83,18 @@ function edit_config
 
 function check_nginx_install
 {
-    if ! 2>&1 $query nginx fcgiwrap >/dev/null; then
-        echo "NGINX and/or fcgiwrap modules not installed!"
+    if ! 2>&1 $query $dependencies >/dev/null; then
+        echo "NGINX and/or ffmpeg, perl, fcgiwrap not installed!"
         nginxIsInstalled="no"
     else
-        echo "Nginx and fcgiwrap installed. Continuing..."
+        echo "All requisite dependencies are installed. Continuing..."
     fi
 }
 
 function install_nginx
 {
     echo "Installing nginx and all dependencies..."
-    2>&1 $packager nginx fcgiwrap >/dev/null
+    2>&1 $packager $dependencies >/dev/null
 }
 
 function restart_nginx

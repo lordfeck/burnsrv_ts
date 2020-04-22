@@ -11,11 +11,19 @@ use File::chdir; #provides $CWD variable for manipulating working directory
 use warnings;
 use feature ':5.10';
 
+# EDIT THESE VALUES TO MATCH YOUR ENVIRONMENT
 $testUser="mbrown49";
 $testCfgDir="/home/$testUser/csc3002_approximem/util/testcfg/";
 $testFlag="/home/$testUser/.testrunning";
+# SHA 256 Hashed Password
+$hashWord="494a715f7e9b4071aca61bac42ca858a309524e5864f0920030862a4ae7589be";
+# END USER-EDITED SECTION
 
 # DEFINE FUNCTIONS
+
+# This uses fork to launch testrunner in the background. Otherwise, the script
+# would wait for testrunner to finish execution. There may be a more elegant
+# way, and I'd prefer that, but such is life.
 sub launchTests {
     my $pid = fork;
     if ($pid) {
@@ -35,15 +43,12 @@ sub launchTests {
 
 }
 
-# SHA 256 Hashed Password
-$hashWord="494a715f7e9b4071aca61bac42ca858a309524e5864f0920030862a4ae7589be";
-
 # The supplied password parameter
 $passWord=param("passwd");
 
-# For testing, will not be set if we have the param value.
+# For testing, passWord will not be set to this if we have the value from param().
 unless ($passWord) {
-    $passWord="changeme123";
+    $passWord="WRONG";
 }
 chomp ($passWord);
 
