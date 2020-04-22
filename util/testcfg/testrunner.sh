@@ -42,6 +42,7 @@ function readInServers {
 function checkError {
     if [ "$?" -ne "0" ]; then
         echo "CRITICAL: Error when $1. Exiting."
+        setTestFlag "clear"
         exit 1
     fi
 }
