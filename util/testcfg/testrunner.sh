@@ -9,7 +9,7 @@ if [ ! -s "stream.config" ]; then
 fi
 
 . stream.config
-declare -a streamServers shortDescs
+declare -a streamServers shortDescs ifNames
 let svrIdx=0
 
 # DEFINE FUNCTIONS
@@ -30,10 +30,11 @@ function readInServers {
     fi
 
     let i=0
-    while IFS=, read -r hostname shortdesc longdesc
+    while IFS=, read -r hostname shortdesc longdesc ifname
     do
         streamServers[$svrIdx]="$hostname"
         shortDescs[$svrIdx]="$shortdesc"
+        ifNames[$svrIdx]="$ifname"
         ((svrIdx++))
     done < "$1"
 }
@@ -82,6 +83,7 @@ function backupOldCaptures {
 function doStream {
     server="${streamServers[i]}"
     shortDesc="${shortDescs[i]}"
+    ifname="${ifNames[i]}"
 
     backupOldCaptures
 
@@ -90,11 +92,11 @@ function doStream {
 
     scp -q "starttcpdump.sh" "${userName}@${server}:/home/$userName/" 
     sleep 1
-    ssh "${userName}@${server}" "/home/$userName/starttcpdump.sh eth0 $pcapFileName $tcpderr"
+    ssh "${userName}@${server}" "/home/$userName/starttcpdump.sh $ifname $pcapFileName $tcpderr"
     checkError "Beginning remote tcpdump for $server."
     ./starttcpdump.sh "$localIface" "./$capDir/$shortDesc.local" "$tcpderr"
     checkError "Beginning local tcpdump for ${server}"
-    echo "Beginning stream for $server length $streamMaxLength in 4..."
+    echo "Beginning stream for $server length $length in 4..."
     sleep 4
 
     # %s - seconds since unix epoch, %N is nanoseconds

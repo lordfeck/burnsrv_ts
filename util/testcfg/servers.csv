@@ -1,3 +1,3 @@
-qub-streamer.thran.uk,az-x86,Azure x86
-qub-streamer2.thran.uk,aws-arm,AWS ARM
-qub-streamer3.thran.uk,gcp-x86,Google Cloud Platform (x86)
+qub-streamer.thran.uk,az-x86,Azure x86,eth0
+qub-streamer2.thran.uk,aws-arm,AWS ARM,eth0
+qub-streamer3.thran.uk,gcp-x86,Google Cloud Platform (x86),ens4
