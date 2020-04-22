@@ -78,6 +78,9 @@ function edit_config
 {
     echo "Editing config files in $nginxConfigDir with correct WWWroot."
     sed -i "s/##WWWROOT##/$wwwroot/g" $nginxConfigDir/sites-available/default
+    ln -s "$resultsDir/" "${htmlDir}html/results"
+    # Fix because ln creates a recursive link in the resultsDir for some reason.
+    rm "$resultsDir/results"
     sed -i "s/##BBC1ROOT##/$bbc1root/g" $nginxConfigDir/nginx.conf 
 }
 
@@ -147,7 +150,6 @@ fi
 check_nginx_install
 if [ "$nginxIsInstalled" = "no" ]; then
     install_nginx
-    #install_rtmp
 fi
 copy_config
 edit_config
