@@ -3,7 +3,7 @@
 # Author: MJB Authored: 06/12/19
 . common.sh
 
-testUser="mjb"
+testUser="mbrown49"
 testFlag=".testrunning"
 
 writeJSONHeader
