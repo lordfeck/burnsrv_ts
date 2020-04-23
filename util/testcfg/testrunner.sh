@@ -16,9 +16,9 @@ let svrIdx=0
 
 function setTestFlag {
     if [ "$1" = "clear" ]; then
-        rm -f $HOME/.testrunning
+        rm -f /tmp/.testrunning
     else
-        touch $HOME/.testrunning
+        touch /tmp/.testrunning
     fi
 }
 

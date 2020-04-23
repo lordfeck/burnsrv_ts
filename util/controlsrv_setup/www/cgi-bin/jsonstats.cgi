@@ -4,7 +4,7 @@
 . common.sh
 
 testUser="mbrown49"
-testFlag=".testrunning"
+testFlag="/tmp/.testrunning"
 
 writeJSONHeader
 
@@ -35,7 +35,7 @@ function getProcRSS {
 }
 
 function isTestRunning {
-   if [ -e "/home/$testUser/$testFlag" ]; then
+   if [ -e "$testFlag" ]; then
         echo "true"
    else
         echo "false" 
