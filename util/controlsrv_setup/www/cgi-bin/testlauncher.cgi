@@ -14,7 +14,7 @@ use feature ':5.10';
 # EDIT THESE VALUES TO MATCH YOUR ENVIRONMENT
 $testUser="mbrown49";
 $testCfgDir="/home/$testUser/csc3002_approximem/util/testcfg/";
-$testFlag="/home/$testUser/.testrunning";
+$testFlag="/tmp/.testrunning";
 # SHA 256 Hashed Password
 $hashWord="494a715f7e9b4071aca61bac42ca858a309524e5864f0920030862a4ae7589be";
 # END USER-EDITED SECTION
