@@ -114,7 +114,8 @@ function doStream {
     runtime="$((after-before))"
     ms="$((runtime/1000000))"
     echo "Stream ran for $ms ms"
-    echo "$currentStreamId/$totalStreams: Params: $server-$vid-$res-$quant-$length. Ran for ${ms}ms." > "$lastMsg"
+    # update status message for web UI
+    echo "$currentStreamId/$totalStreams: Params: $shortDesc-$vid-$res-$quant-$length. Ran for ${ms}ms." > "$lastMsg"
 
     getRemoteCapture
 
