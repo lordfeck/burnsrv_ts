@@ -15,6 +15,7 @@
                 if (this.readyState == 4 && this.status == 200) {
                      sysstats = JSON.parse(sysReq.responseText);
                      document.getElementById("isTestRunning").innerHTML = sysstats.isTestRunning;
+                     document.getElementById("lastMsg").innerHTML = sysstats.lastMsg;
                 }
             };
 
@@ -44,6 +45,17 @@
             <tbody>
                 <tr>
                     <td id="isTestRunning">Awaiting Data</td>
+                </tr>
+            </tbody>
+
+            <thead>
+                <tr>
+                    <th colspan="2">Latest status from test run:<th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="2" id="lastMsg">Awaiting Status......</td>
                 </tr>
             </tbody>
         </table>

@@ -180,6 +180,7 @@ currentStreamId=0;
 # First create the blank logfile
 touch "$logFilePath"
 checkError "accessing the logfile at $logDir/$logFilePath"
+echo "Test run on $startDate begins." > "$lastMsg"
 
 echo "Launching tcpdump and performing stream on each specified server."
 echo "We have $totalStreams total streams to run."
