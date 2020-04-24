@@ -114,6 +114,7 @@ function doStream {
     runtime="$((after-before))"
     ms="$((runtime/1000000))"
     echo "Stream ran for $ms ms"
+    echo "$currentStreamId/$totalStreams: Params: $server-$vid-$res-$quant-$length. Ran for ${ms}ms." > "$lastMsg"
 
     getRemoteCapture
 
@@ -205,8 +206,9 @@ done
 # BEGIN ANALYSIS
 
 # launch slogger for analysis
-echo "Launching slogger... NOT YET"
+echo "Launching slogger to generate charts... (not yet implemented)"
 
 # END ANALYSIS
-
+echo "Test run for $startDate complete." | tee "$lastMsg"
 setTestFlag "clear"
+

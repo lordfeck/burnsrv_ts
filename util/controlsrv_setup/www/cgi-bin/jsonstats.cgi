@@ -5,6 +5,7 @@
 
 testUser="mbrown49"
 testFlag="/tmp/.testrunning"
+lastMsg="/tmp/.lastmsg"
 
 writeJSONHeader
 
@@ -42,6 +43,14 @@ function isTestRunning {
    fi
 }
 
+function getLastMsg {
+    if [ -s "$lastMsg" ]; then
+        cat "$lastMsg"
+    else
+        echo "$(date): No status yet..."
+    fi
+}
+
 # Begin JSON composition
 echo "{"
 
@@ -67,6 +76,9 @@ jT "ffmpegRssKb"
 jF "$(getProcRSS ffmpeg )"
 
 jT "isTestRunning"
-jF "$(isTestRunning)" "f"
+jF "$(isTestRunning)" 
+
+jT "lastMsg"
+jF "$(getLastMsg)" "f"
 
 echo "}"
