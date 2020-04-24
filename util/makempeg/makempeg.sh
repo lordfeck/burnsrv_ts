@@ -4,8 +4,9 @@
 # MJB 20/01/2020, updated 16/04/2020
 
 banner='MakeMPEG. Usage:\n./makempeg.sh <inputfile.mp4>\nRelies upon stream.config to get conversion formats.'
-streamcfg="stream.config"
-# ../testcfg/stream.config
+streamcfg="../testcfg/stream.config"
+# Set start time and max length for imput video (optional)
+timearg='-ss 00:02:35 -t 00:05:00'
 
 if [ ! -s "$streamcfg" ]; then
     echo "Critical failure: stream.config file doesn't exist or is empty. Exiting."
@@ -13,10 +14,6 @@ if [ ! -s "$streamcfg" ]; then
 fi
 
 . "$streamcfg"
-
-# Cut to 'islands' + 5m
-# -async 1 may be necessary
-#readonly timearg='-ss 00:02:35 -t 00:05:00'
 
 function checkError {
     if [ "$?" -ne "0" ]; then
@@ -46,7 +43,7 @@ else
 fi
 
 # chop infile name of its extension for renaming
-basename="${infile%'.y4m'}"
+basename="${infile%'.mp4'}"
 
 # quick calculation to verify we've read the config file correctly
 resc=${#resolutions[@]}
