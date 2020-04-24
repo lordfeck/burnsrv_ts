@@ -1,5 +1,5 @@
 #!/bin/bash
-# New CGI that handles stats as JSON
+# New CGI that presents stats as JSON
 # Author: MJB Authored: 06/12/19
 . common.sh
 
@@ -32,7 +32,12 @@ function getLoadAvg {
 
 # Resident set size; total of process in memory
 function getProcRSS {
-    ps --no-headers -C "$1" -o rss |  awk '{rss += $1} END {print rss}'
+    local rss=$( ps --no-headers -C "$1" -o rss |  awk '{rss += $1} END {print rss}' )
+    if [ -z $rss ]; then
+        echo "0"
+    else
+        echo $rss
+    fi
 }
 
 function isTestRunning {
