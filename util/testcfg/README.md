@@ -10,11 +10,13 @@ When run, the script cycles through each server and each video parameter. For ea
 
 * Make sure config files are accurate.
 
-* Run `./testrunner.sh`. This will launch the configured tests.
+* Run `./testrunner.sh`. This will carry out all the configured tests.
+
+* Alternatively, connect to the server using a web browser and use use the Web UI's "Test Control" section to launch the tests.
 
 * Output CSV will be found (by default) in the `./results/` directory.
 
-* You may run `./testrinner.sh -k` to kill a test in progress and reset the system.
+* You may run `./testrunner.sh -k` to kill a test in progress and reset the system.
 
 ## Assumptions:
 
