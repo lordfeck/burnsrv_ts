@@ -10,12 +10,34 @@ Memories.
 * C
 * Make
 * Bash
-* HTML
+* HTML/CSS/Js
 * Perl
 
 # Repository Layout
+For each subsection, a readme file details its purpose and usage in greater depth.
 
-## functfun/
+## util/
+Util contains all utility scripts that will assist us with installing servers and running tests using these servers.
+
+### util/burnsrv_setup
+Scripts that will assist setting up an NGINX RTMP streaming server.
+
+### util/controlsrv_setup
+Installation script for a testing and reporting server. Allows the choice of either a Web UI or Command Line Interface to launch tests. 
+
+### util/testcfg
+*This section should be considered the meat and bones of this project.* Testcfg contains the `testrunner.sh` script which launches a set of streams, as configured inside `stream.config`. The readme file therein comprehensively documents its functions.
+
+There are also scripts to assist with time syncing across each host.
+
+### util/makempeg
+A script that uses FFmpeg to batch convert a video file into formats required by the tests.
+
+### util/slogger
+A Perl script to analyse results from testrunner and calculate graphs and statistics. [not complete].
+
+
+## functfun/ [partially complete]
 Short for 'Fun with Functions'. This can be configured to generate a log table
 for any given range. The log table can be saved to disk or read from disk into
 memory. The intention is that functfun will hold the values in memory while
@@ -34,6 +56,8 @@ the testing procedures.
 * Read log table from disk
 * Log tables are allocated directly to heap memory
 
+**Note:** Funcunct is mostly functional, but there are bugs. Not fully realised.
+
 ## samples/
 
 Sample images and binfiles for funfunct.
@@ -42,20 +66,4 @@ Sample images and binfiles for funfunct.
 Any libraries that aren't authored by the maintainer. These however are
 necessary to build some of the source. Currently empty.
 
-## util/
-Util contains all utility scripts that will assist us with running experiments
-and any other future needs of this project.
 
-### util/burnsrv_setup
-Scripts that will assist setting up an NGINX streaming server. **See Readme there for details.**
-Also contains scripts to conduct the streaming and HTML sources.
-
-**Requirements**
-Requires the BASH shell, nginx, ffmpeg and libnginx-mod-rtmp to run.
-
-### util/testcfg
-
-Note: Currently being rewritten. 
-
-## [abandoned] mathlib/
-An experimental maths library written in pure C. I planned to use it with functfun, but it wasn't necessary as C had its own built-in maths functions. However it wasn't a waste of time as it provided an opportunity to refresh my programming skills.

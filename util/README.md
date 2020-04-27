@@ -2,10 +2,12 @@
 
 ## In brief:
 
-Note (05/04/2020): `testcfg` is deprecated. The intention was it could be configured to run multiple tests overnight. It is possible that it could be revived later.
+* `testcfg` contains `testrunner.sh` which runs the test configured inside `stream.config`. Please see the readme file there for more detail and description.
 
-`burnsrv_setup` contains everything needed to install a streaming server. It also contains some scripts to run streams using ffmpeg.
+* `burnsrv_setup` contains everything needed to install a streaming server.
 
-`makempeg` contains scripts that will generate a number of sample files in the required formats.
+* `controlsrv_setup` contains the setup files to install a monitoring, testing and reporting server.
 
-`slogger` contains the perl scripts to take tcpdump files and analyse them.
+* `makempeg` contains scripts that will generate a number of sample video files in the required formats.
+
+* `slogger` contains the perl scripts to take result files and analyse them.
