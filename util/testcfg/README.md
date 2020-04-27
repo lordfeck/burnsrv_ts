@@ -20,7 +20,7 @@ When run, the script cycles through each server and each video parameter. For ea
 
 * `ffmpeg` is installed on the local system.
 
-* SSH keys have been copied from the local to all remote systems. Passwordless SSH logins must be possible for the experiment to run SSH keys have been copied from the local to all remote systems. Passwordless SSH logins must be possible for the experiment to run0.
+* SSH keys have been copied from the local to all remote systems. Passwordless SSH logins must be possible for the experiment to run SSH keys have been copied from the local to all remote systems. Passwordless SSH logins must be possible for the experiment to run.
 
 * The user account specified in `stream.config` should have `sudo` permissions *without* the need for a password.
 
@@ -87,7 +87,7 @@ This script ensures that the times on two hosts are exact. Uses crony (ntp daemo
 * Optionally, using Greenwich a cron job may be set to call `gpolltime.sh` on each host after a minute. This records the exact time on each host. Then these times are collected and compared. Thereby, the time sync may be validated.
 
 ### startclient.sh
-Use FFMPEG and stream a supplied rtmp stream to /dev/null. Used to create connections to a server.
+Use FFMPEG and stream a supplied rtmp stream to /dev/null. Used extensively inside `testrunner.sh` and shouldn't be run directly, development purposes notwithstanding.
 
 ### livestream.sh
 Use FFMPEG to stream MP4 video files live to rtmp. This is the same as broadcasting from your home PC and using the server to relay towards many hosts. We haven't used this method for the experiment; rather the chosen vod method is implemented in `startclient.sh`.

@@ -1,6 +1,6 @@
 # controlsrv setup
 
-Setup files that will build a controlsrv. The controlsrv is responsible for testing, monitoring and reporting the results of streaming experiments.
+Setup files that will build a controlsrv. The controlsrv is responsible for testing, monitoring and reporting the results of streaming experiments. The controlsrv features both a Web and Command Line interface, that it may be used by users of either preference.
 
 ## Requirements
 Requires the BASH shell, nginx, fcgiwrap, ffmpeg and a number of Perl modules to function fully. Check  the *dependencies* variable inside `setup.config`.
@@ -11,7 +11,7 @@ Requires the BASH shell, nginx, fcgiwrap, ffmpeg and a number of Perl modules to
 
 This script will fully install a controlsrv machine.
 
-* Check that ports 80 and 1935 are free
+* Check that port 80 is free.
 * Setup Nginx (if not already installed)
 * Installs fcgiwrap.
 * Create dirs for both HTML and scripts, then copies these across.

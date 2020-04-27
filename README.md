@@ -38,7 +38,7 @@ A Perl script to analyse results from testrunner and calculate graphs and statis
 
 
 ## functfun/ [partially complete]
-Short for 'Fun with Functions'. This can be configured to generate a log table
+Short for 'Fun with Functions'. This can be configured to generate a table of logarithms
 for any given range. The log table can be saved to disk or read from disk into
 memory. The intention is that functfun will hold the values in memory while
 the memory conditions are adjusted. Whence we can observe the effects of approx.
@@ -51,19 +51,23 @@ the testing procedures.
 `./fftest -h` gives a full overview of options
 
 **Features**
-* Generate log table for range
-* Save log table to disk
-* Read log table from disk
-* Log tables are allocated directly to heap memory
+* Generate logarithm table for range
+* Save logarithm table to disk
+* Read logarithm table from disk
+* Logarithm tables are allocated directly to heap memory
 
-**Note:** Funcunct is mostly functional, but there are bugs. Not fully realised.
+The same is also possible for JPEG image files.
+
+Conversion of binary logarithim tables to/from text format is possible using the utility `ffcnv`.
+
+**Note:** Funfunct is mostly functional, but there are bugs. Not fully realised.
 
 ## samples/
 
 Sample images and binfiles for funfunct.
 
 ## contrib/
-Any libraries that aren't authored by the maintainer. These however are
+Any libraries that aren't authored by the maintainer. These are
 necessary to build some of the source. Currently empty.
 
 
