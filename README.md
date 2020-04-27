@@ -1,4 +1,4 @@
-# csc3002_approximem
+# Burnsrv Test Suite
 
 Source code repository for CSC3002: Evaluation of Applications on Approximate
 Memories.
