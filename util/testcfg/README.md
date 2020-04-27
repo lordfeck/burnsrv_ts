@@ -14,6 +14,8 @@ When run, the script cycles through each server and each video parameter. For ea
 
 * Output CSV will be found (by default) in the `./results/` directory.
 
+* You may run `./testrinner.sh -k` to kill a test in progress and reset the system.
+
 ## Assumptions:
 
 * `tcpdump` is installed on both the local and remote systems.

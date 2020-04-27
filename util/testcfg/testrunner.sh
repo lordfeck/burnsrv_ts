@@ -132,6 +132,34 @@ function doStream {
     ((currentStreamId++))
 }
 
+# run this to kill a test in progress
+function killTest {
+    readInServers "$serverList"
+
+    echo "Running kill operation on remote server TCPdumps. Errors are expected."
+
+    for server in "${streamServers[@]}"; do
+        ssh "${userName}@${server}" 'sudo kill -2 `pgrep tcpdump`' 
+        checkWarning "Killing remote TCPdump for $server"
+    done
+
+    echo "Killing local tcpdump and ffmpeg processes"
+    sudo kill -2 `pgrep tcpdump` 2>&1 >/dev/null
+    checkWarning "Killing local TCPdump"
+
+    sudo kill -2 `pgrep ffmpeg` 2>&1 >/dev/null
+    checkWarning "Killing local ffmpeg"
+
+    setTestFlag "clear"
+    echo "$(date): Controlsrv awaiting command." > $lastMsg
+}
+
+# if we call script wit -k, then kill the test and exit.
+if [ "$1" = "-k" ]; then
+    killTest
+    exit
+fi
+
 # BEGIN PREPARATION SECTION
 
 setTestFlag
