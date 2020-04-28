@@ -1,12 +1,16 @@
 # burnsrv setup
 
-Setup files that will build a streaming server. Also utility scripts to run a streaming server.
+Setup files that will build a burnsrv, or streaming server.
 
 **Burn:** *noun*, Ulster-Scots word meaning 'stream' or 'brook'. Also refers to what
-happens to the RAM during these experiments.
+happens to the RAM during some experiments.
 
 ## Requirements
 Requires the BASH shell, nginx, fcgiwrap and libnginx-mod-rtmp to run. Other dependencies are checked and installed during the script's execution.
+
+It is recommended to install your burnsrv onto Debian or its derivative Ubuntu. Some required libraries (notably nginx-rtmp) are not available ready-built on CentOS.
+
+The setup script will query your packager for dependencies. On recent Debian (10+) and Ubuntu (18.04+) versions all dependencies are available in the OS maintainer's repository.
 
 ## Script Features
 
@@ -37,4 +41,10 @@ The script should be run either with `sudo` or using `root`.
 
 Basic CGI scripts to monitor system health. These may be visited by the web server.
 Nginx also has a handy inbuilt tool to report stream statistics. This is also enabled by default.
+
+### Description of Directories.
+
+* `config` configuration files used by nginx. Copied and modified by install.sh.
+* `www` HTML and CGI sources. Both are copied to the specified WWW-root by install.sh.
+* `bbc1` RTMP video directory. The video files stored therein are streamed by `../testcfg/testrunner.sh` during a test run. Default contains one MP4 sample, duck.mp4.
 
