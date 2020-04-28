@@ -30,6 +30,24 @@ sub killTests {
 
         local $CWD=$testCfgDir;
         exec ("sudo -u $testUser ./killtestproc.sh") or say "Problem executing killtestproc.sh.";
+    }
+    else {
+        print "Failure creating process.";
+    }
+
+}
+
+sub resetEnv {
+    my $pid = fork;
+    if ($pid) {
+        print "Called killscript and testrunner with reset switch. Farewell, test run.";
+    }
+    elsif (defined $pid) {
+        open STDIN,  '<', '/dev/null';
+        open STDOUT, '>', '/dev/null'; # or point this to a log file
+        open STDERR, '>&STDOUT';
+
+        local $CWD=$testCfgDir;
         exec ("sudo -u $testUser ./testrunner.sh -r") or say "Problem launching testrunner.sh w/ reset switch.";
     }
     else {
@@ -37,6 +55,7 @@ sub killTests {
     }
 
 }
+
 
 # The supplied password parameter
 $passWord=param("passwd");
@@ -60,6 +79,7 @@ if ( $hashWord eq $hashIn ) {
     say "<h2>ACCESS GRANTED</h2>";
     say "<p>Now killing any test run in progress...</p>";
     killTests;
+    resetEnv;
     say "<p>Check the previous page to track the test run status.</p>";
 } else {
     say "Invalid Password";
