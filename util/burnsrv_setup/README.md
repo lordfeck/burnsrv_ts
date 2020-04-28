@@ -12,11 +12,16 @@ It is recommended to install your burnsrv onto Debian or its derivative Ubuntu. 
 
 The setup script will query your packager for dependencies. On recent Debian (10+) and Ubuntu (18.04+) versions all dependencies are available in the OS maintainer's repository.
 
-## Script Features
+## Description of Directories.
 
-### setup.sh
+* `./config/` configuration files used by nginx. Copied and modified by *setup.sh*.
+* `./www/` HTML and CGI sources. Both are copied to the specified WWW-root by *setup.sh*.
+* `./bbc1/` RTMP video directory. The video files stored therein are streamed by `../testcfg/testrunner.sh` during a test run. Default contains one MP4 sample, duck.mp4.
 
-This script will fully install a burnsrv machine.
+
+## Setup Script Features
+
+The `setup.sh` script will fully install a burnsrv machine.
 
 * Check that ports 80 and 1935 are free
 * Setup Nginx (if not already installed)
@@ -36,15 +41,8 @@ Call `./setup.sh -h` to see all setup options listed.
 
 The script should be run either with `sudo` or using `root`.
 
-
 ### Also contains
 
-Basic CGI scripts to monitor system health. These may be visited by the web server.
+Basic CGI scripts to monitor system health. These may be visited by the web server. Stored in `./www/cgi-bin/`
 Nginx also has a handy inbuilt tool to report stream statistics. This is also enabled by default.
-
-### Description of Directories.
-
-* `config` configuration files used by nginx. Copied and modified by install.sh.
-* `www` HTML and CGI sources. Both are copied to the specified WWW-root by install.sh.
-* `bbc1` RTMP video directory. The video files stored therein are streamed by `../testcfg/testrunner.sh` during a test run. Default contains one MP4 sample, duck.mp4.
 
