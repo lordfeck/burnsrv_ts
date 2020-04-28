@@ -21,7 +21,7 @@ $hashWord="494a715f7e9b4071aca61bac42ca858a309524e5864f0920030862a4ae7589be";
 sub killTests {
     my $pid = fork;
     if ($pid) {
-        print "Called testrunner with killswitch. Farewell, test run.";
+        print "Called killscript and testrunner with reset switch. Farewell, test run.";
     }
     elsif (defined $pid) {
         open STDIN,  '<', '/dev/null';
@@ -29,10 +29,11 @@ sub killTests {
         open STDERR, '>&STDOUT';
 
         local $CWD=$testCfgDir;
-        exec ("sudo -u $testUser ./testrunner.sh -k") or say "Problem launching testrunner.sh w/ killswitch.";
+        exec ("sudo -u $testUser ./killtestproc.sh") or say "Problem executing killtestproc.sh.";
+        exec ("sudo -u $testUser ./testrunner.sh -r") or say "Problem launching testrunner.sh w/ reset switch.";
     }
     else {
-        print "Testruner's killswitch failed to launch!";
+        print "Failure creating process.";
     }
 
 }

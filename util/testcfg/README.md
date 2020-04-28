@@ -16,7 +16,7 @@ When run, the script cycles through each server and each video parameter. For ea
 
 * Output CSV will be found (by default) in the `./results/` directory.
 
-* You may run `./testrunner.sh -k` to kill a test in progress and reset the system.
+* You may run `./testrunner.sh -r` to reset the test environment.
 
 ## Assumptions:
 
@@ -80,6 +80,9 @@ Example: `tractor,az-x86,1,00:25,23,854x480,21466311254,6817,21.734`
 The rest of the parameters are either described already or need no elaboration.
 
 ## Description of other scripts:
+
+### killtestproc.sh
+Call this to kill any testrunner.sh processes currently running. Best practice is to execute this before executing `testrunner.sh -k` to reset the environment.
 
 ### greenwich.sh
 This script ensures that the times on two hosts are exact. Uses crony (ntp daemon) and cron to accomplish this. Includes a helper script for sync validation, `gpolltime.sh`.

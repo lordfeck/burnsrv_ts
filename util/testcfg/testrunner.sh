@@ -133,7 +133,7 @@ function doStream {
 }
 
 # run this to kill a test in progress
-function killTest {
+function resetTestEnv {
     readInServers "$serverList"
 
     echo "Running kill operation on remote server TCPdumps. Errors are expected."
@@ -152,11 +152,12 @@ function killTest {
 
     setTestFlag "clear"
     echo "$(date): Controlsrv awaiting command." > $lastMsg
+    
 }
 
-# if we call script wit -k, then kill the test and exit.
-if [ "$1" = "-k" ]; then
-    killTest
+# if we call script with -r, then reset test environment and exit
+if [ "$1" = "-r" ]; then
+    resetTestEnv
     exit
 fi
 
