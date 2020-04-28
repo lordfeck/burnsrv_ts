@@ -41,7 +41,7 @@ sub killTests {
 # The supplied password parameter
 $passWord=param("passwd");
 
-# For testing, passWord will not be set to this if we have the value from param().
+# passWord will not be set to this if we have the value from param().
 unless ($passWord) {
     $passWord="WRONG";
 }
