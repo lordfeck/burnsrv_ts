@@ -21,7 +21,7 @@ $hashWord="494a715f7e9b4071aca61bac42ca858a309524e5864f0920030862a4ae7589be";
 sub killTests {
     my $pid = fork;
     if ($pid) {
-        print "Called killscript and testrunner with reset switch. Farewell, test run.";
+        print "Called killscript. Farewell, test run.<br>";
     }
     elsif (defined $pid) {
         open STDIN,  '<', '/dev/null';
@@ -40,7 +40,7 @@ sub killTests {
 sub resetEnv {
     my $pid = fork;
     if ($pid) {
-        print "Called killscript and testrunner with reset switch. Farewell, test run.";
+        print "Reset environment. All is normal again.<br>";
     }
     elsif (defined $pid) {
         open STDIN,  '<', '/dev/null';
@@ -80,7 +80,7 @@ if ( $hashWord eq $hashIn ) {
     say "<p>Now killing any test run in progress...</p>";
     killTests;
     resetEnv;
-    say "<p>Check the previous page to track the test run status.</p>";
+    say "<p>Check the previous page to verify success.</p>";
 } else {
     say "Invalid Password";
 }
