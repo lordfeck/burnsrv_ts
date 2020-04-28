@@ -60,9 +60,17 @@
             </tbody>
         </table>
         <p class="newsItem">System Control</p>
+        <p><em>>>> Test Launcher</em></p>
         <p>Please enter the password and click 'SUBMIT' to begin a test run.</p>
         <p>If a test isn't currently running, a new test run will begin.</p>
         <p> <form action="/cgi-bin/testlauncher.cgi" method="post">
+        <label for="passwd">Password:</label> <input type="password" id="passwd" name="passwd" value="WRONG">
+        <input type="submit" value="Submit">
+        </form> </p> 
+
+        <p><em>>>> Test Halter</em></p>
+        <p>Please enter the password and click 'SUBMIT' to halt a test run.</p>
+        <p> <form action="/cgi-bin/testhalter.cgi" method="post">
         <label for="passwd">Password:</label> <input type="password" id="passwd" name="passwd" value="WRONG">
         <input type="submit" value="Submit">
         </form> </p> 
