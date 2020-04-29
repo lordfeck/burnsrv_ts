@@ -24,7 +24,7 @@ When run, the script cycles through each server and each video parameter. For ea
 
 * `ffmpeg` is installed on the local system.
 
-* SSH keys have been copied from the local to all remote systems. Passwordless SSH logins must be possible for the experiment to run SSH keys have been copied from the local to all remote systems. Passwordless SSH logins must be possible for the experiment to run.
+* SSH keys have been copied from the local to all remote systems. Passwordless SSH logins must be possible for the experiment to run.
 
 * The user account specified in `stream.config` should have `sudo` permissions *without* the need for a password.
 
@@ -82,7 +82,7 @@ The rest of the parameters are either described already or need no elaboration.
 ## Description of other scripts:
 
 ### killtestproc.sh
-Call this to kill any testrunner.sh processes currently running. Best practice is to execute this before executing `testrunner.sh -k` to reset the environment.
+Call this to kill any testrunner.sh processes currently running. Best practice is to execute this before executing `testrunner.sh -r` to reset the environment.
 
 ### greenwich.sh
 This script ensures that the times on two hosts are exact. Uses crony (ntp daemon) and cron to accomplish this. Includes a helper script for sync validation, `gpolltime.sh`.
