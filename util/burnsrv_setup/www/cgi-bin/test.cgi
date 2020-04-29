@@ -5,9 +5,7 @@
 
 . common.sh
 
-writeHeader
-
-echo '<html><head><title>the world of bash beckons</title></head>'
+writeHeader "the world of bash beckons"
 
 wH 'bash made this'
 
@@ -23,4 +21,4 @@ wP "$(/usr/bin/env)"
 wH 'Looks very well to me.' "2"
 wP "Test over."
 
-echo '</html>'
+writeFooter
