@@ -78,8 +78,8 @@ function backupOldCaptures {
     checkWarning "backing up old captures"
 }
 
-# This will be called once for each configuration. Uses variables declared
-# outside the function body but within its scope.
+# This will be called once for each configuration by the master loop down below.
+# Uses variables declared outside the function body but within its scope.
 function doStream {
     server="${streamServers[i]}"
     shortDesc="${shortDescs[i]}"
@@ -199,7 +199,7 @@ fi
 
 # END PREP
 
-# BEGIN MAIN TEST RUN LOOP
+# BEGIN MAIN TEST RUN BODY
 
 # Set date to identify the test run.
 startDate="$( date '+%F-%H%M%S' )"
@@ -215,6 +215,7 @@ echo "Test run on $startDate begins." > "$lastMsg"
 echo "Launching tcpdump and performing stream on each specified server."
 echo "We have $totalStreams total streams to run."
 
+# BEGIN MASTER LOOP
 # Yes, there are many loops. But this allows for limitless expansion.
 for vid in "${streamFiles[@]}"; do
     for res in "${resolutions[@]}"; do
@@ -231,8 +232,9 @@ for vid in "${streamFiles[@]}"; do
         done
     done
 done
+# END MASTER LOOP
 
-# END MAIN
+# END MAIN BODY
 
 # BEGIN ANALYSIS
 
