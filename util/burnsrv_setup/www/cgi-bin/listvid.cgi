@@ -9,7 +9,7 @@ vodDir="/local/mbrown49/burnsrv/bbc1"
 writeHeader "Burnsrv: Video Directory Listing"
 
 wH "Video files available to stream:"
-wP "$(ls $vodDir)"
+writeList $(ls $vodDir)
 
 wP '<a href="../index.html">Return to homepage</a>'
 

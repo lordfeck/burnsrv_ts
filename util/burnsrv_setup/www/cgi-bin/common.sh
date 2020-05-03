@@ -27,6 +27,14 @@ function writeFooter {
     echo "</html>"
 }
 
+function writeList {
+    echo -n "<p>";
+    for element in "$@"; do
+        echo "$element<br>";
+    done
+    echo -n "</p>";
+}
+
 # === BEGIN JSON FUNCTIONS === #
 
 function writeJSONHeader {
