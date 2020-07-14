@@ -3,8 +3,7 @@
 Source code repository for CSC3002: Evaluation of Applications on Approximate
 Memories.
 
-**Maintainer:** Mark Brown
-**Contact:** mbrown49@qub.ac.uk
+**Licence:** 3BSD, unless specified otherwise.
 
 # Programming and Scripting Languages
 * C
